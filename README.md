@@ -4,7 +4,7 @@
 
 该工具使用Excel格式的歌单。填写歌名、视频BV号、剪辑时间，即可生成音频文件。注意：当前仅支持使用B站视频作为音频源。
 
-歌单文件示例格式如下：
+歌单格式示例如下：
 
 曲名	|视频 BV号	|剪辑时间（未填写时默认全曲）
 :--|:--|:--
@@ -18,6 +18,12 @@
 ## 下载链接
 
 https://github.com/lightningmaker/RandomPlayDance-Generator/releases
+
+---
+
+## 注意
+
+注意：win7 / win8 系统需要手动下载 [.NET Framework 4.7.2运行环境](https://dotnet.microsoft.com/zh-cn/download/dotnet-framework/net472)。win10 / win11可以直接运行。
 
 ---
 
