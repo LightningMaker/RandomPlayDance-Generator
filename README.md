@@ -1,27 +1,27 @@
-# ������Ƶ������
+# 随舞音频生成器
 
-![���ڽ�ͼ](Screenshot.png)
+![窗口截图](Screenshot.png)
 
-�ù���ʹ��Excel��ʽ�ĸ赥����д��������ƵBV�š�����ʱ�䣬����������Ƶ�ļ���ע�⣺��ǰ��֧��ʹ��Bվ��Ƶ��Ϊ��ƵԴ��
+该工具使用Excel格式的歌单。填写歌名、视频BV号、剪辑时间，即可生成音频文件。注意：当前仅支持使用B站视频作为音频源。
 
-�赥�ļ�ʾ����ʽ���£�
+歌单文件示例格式如下：
 
-����	|��Ƶ BV��	|����ʱ�䣨δ��дʱĬ��ȫ����
-:--|:--|:--|:--
-����ͬ��B with U	|BV16W411s7Gz	|0:00-0:33
-�ʺ����	|BV127411q7zn	|0:31-1:46
-�˿�memories	|BV1dD421A7sY	|2:43-3:32
-��ô�ɰ����Ǳ�Ǹ	|BV1iy4y1Z7Ri	|ȫ��
+曲名	|视频 BV号	|剪辑时间（未填写时默认全曲）
+:--|:--|:--
+与你同行B with U	|BV16W411s7Gz	|0:00-0:33
+彩虹节拍	|BV127411q7zn	|0:31-1:46
+此刻memories	|BV1dD421A7sY	|2:43-3:32
+这么可爱真是抱歉	|BV1iy4y1Z7Ri	|全曲
 
 ---
 
-## ��������
+## 下载链接
 
 https://github.com/lightningmaker/RandomPlayDance-Generator/releases
 
 ---
 
-## ��л
+## 致谢
 
 [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
 
