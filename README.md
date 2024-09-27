@@ -17,7 +17,7 @@
 
 ## 下载链接
 
-https://github.com/lightningmaker/RandomPlayDance-Generator/releases
+https://github.com/LightningMaker/RandomPlayDance-Generator/releases
 
 ---
 
