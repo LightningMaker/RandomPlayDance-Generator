@@ -24,6 +24,8 @@ namespace RandomPlayDance_Generator_3
 
         public static string CustomIntervalPath { get; private set; } = null;
 
+        public static bool IsUsingDash { get; private set; } = true;
+
         public Form1()
         {
             InitializeComponent();
@@ -219,6 +221,16 @@ namespace RandomPlayDance_Generator_3
         private void ToolStripMenuItemCopy_Click(object sender, EventArgs e)
         {
             textLogBox.Copy();
+        }
+
+        private void MP4Download_CheckedChanged(object sender, EventArgs e)
+        {
+            IsUsingDash = false;
+        }
+
+        private void DashDownload_CheckedChanged(object sender, EventArgs e)
+        {
+            IsUsingDash = true;
         }
     }
 }

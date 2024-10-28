@@ -70,7 +70,7 @@ namespace RandomPlayDance_Generator_3
                 GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./assets", TemporaryFilesFolder = "/tmp" });
 
                 #region 下载歌曲
-                string baseURL = "http://music.163.com/song/media/outer/url?id=";
+
 
                 int currentCount = 0;
                 foreach (DataRow row in dtTable.Rows)
@@ -79,7 +79,7 @@ namespace RandomPlayDance_Generator_3
 
                     string songName = row[0].ToString();
                     string songID = row[1].ToString();
-                    string songURL = baseURL + songID + ".mp3";
+                    
 
                     Form1.Instance.UpdateLog($"【{currentCount}/{dtTable.Rows.Count}】正在下载 " + songName + "...", Form1.LogLevel.Message);
 
@@ -101,45 +101,16 @@ namespace RandomPlayDance_Generator_3
                                 Form1.Instance.UpdateLog("获取视频信息中...", Form1.LogLevel.Detail);
                                 long cid = BiliVideoInfo.GetVideoCid(songID);
                                 Form1.Instance.UpdateLog("视频cid: " + cid, Form1.LogLevel.Detail);
-                                string videoURL = BiliVideoStream.GetVideoStreamURL(songID, cid);
-                                Form1.Instance.UpdateLog("下载视频源: " + videoURL, Form1.LogLevel.Detail);
 
-                                using (HttpClient client = new HttpClient())
+                                if (!Form1.IsUsingDash)
                                 {
-                                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
-                                    client.DefaultRequestHeaders.Referrer = new Uri("http://www.bilibili.com");
-
-                                    HttpResponseMessage response = client.GetAsync(videoURL).Result;
-
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        string videoFile = videoPath + "\\" + songID + ".mp4";
-                                        using (FileStream fs = new FileStream(videoFile, FileMode.Create, FileAccess.Write, FileShare.None))
-                                        {
-                                            response.Content.CopyToAsync(fs).Wait();
-                                        }
-                                        Form1.Instance.UpdateLog(songName + " 下载完成", Form1.LogLevel.Message);
-
-                                        long length = new FileInfo(videoFile).Length;
-                                        //Form1.Instance.UpdateLog($"视频文件大小：{(length / 1024f / 1024).ToString("0.0")} MB", Form1.LogLevel.Detail);
-
-                                        string saveFile = songPath + "\\" + songID + ".mp3";
-
-                                        if (FFMpeg.ExtractAudio(videoFile, saveFile))
-                                        {
-                                            Form1.Instance.UpdateLog(songName + " 音频转换完成", Form1.LogLevel.Message);
-                                        }
-                                        else
-                                        {
-                                            Form1.Instance.UpdateLog(songName + " 音频转换失败", Form1.LogLevel.Error);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Form1.Instance.UpdateLog(songName + " 下载失败：" + response.StatusCode, Form1.LogLevel.Error);
-                                        Form1.Instance.UpdateLog("已跳过当前歌曲", Form1.LogLevel.Warning);
-                                    }
+                                    MP4Downloader.DownloadAudio(songName, songID, cid, songPath, videoPath);
                                 }
+                                else
+                                {
+                                    DashDownloader.DownloadAudio(songName, songID, cid, songPath, videoPath);
+                                }
+
                             }
                         }
                         // other platforms
@@ -150,6 +121,8 @@ namespace RandomPlayDance_Generator_3
                             Form1.Instance.UpdateLog("已跳过当前歌曲", Form1.LogLevel.Warning);
                         }
                         /*{
+                            string baseURL = "http://music.163.com/song/media/outer/url?id=";
+                            string songURL = baseURL + songID + ".mp3";
                             try
                             {
                                 using (WebClient client = new WebClient())

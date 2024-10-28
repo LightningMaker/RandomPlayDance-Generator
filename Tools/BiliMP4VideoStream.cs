@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RandomPlayDance_Generator_3.Tools
 {
-    internal class BiliVideoStream
+    internal class BiliMP4VideoStream
     {
         public static string GetVideoStreamURL(string bvid, long cid)
         {
