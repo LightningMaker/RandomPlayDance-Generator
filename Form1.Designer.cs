@@ -70,9 +70,9 @@
             this.groupBox1.Controls.Add(this.labelExcelPath);
             this.groupBox1.Controls.Add(this.buttonImportExcel);
             this.groupBox1.Location = new System.Drawing.Point(989, 16);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(528, 147);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
@@ -92,7 +92,7 @@
             // buttonImportExcel
             // 
             this.buttonImportExcel.Location = new System.Drawing.Point(21, 36);
-            this.buttonImportExcel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonImportExcel.Margin = new System.Windows.Forms.Padding(4);
             this.buttonImportExcel.Name = "buttonImportExcel";
             this.buttonImportExcel.Size = new System.Drawing.Size(171, 51);
             this.buttonImportExcel.TabIndex = 0;
@@ -114,9 +114,9 @@
             this.groupBox2.Controls.Add(this.labelIntervalFile);
             this.groupBox2.Controls.Add(this.buttonImportAudio);
             this.groupBox2.Location = new System.Drawing.Point(989, 184);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox2.Size = new System.Drawing.Size(528, 203);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
@@ -126,7 +126,7 @@
             // 
             this.numericUpDown1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.numericUpDown1.Location = new System.Drawing.Point(165, 37);
-            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             99,
             0,
@@ -142,7 +142,7 @@
             // 
             this.intervalChoice3.AutoSize = true;
             this.intervalChoice3.Location = new System.Drawing.Point(21, 139);
-            this.intervalChoice3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.intervalChoice3.Margin = new System.Windows.Forms.Padding(4);
             this.intervalChoice3.Name = "intervalChoice3";
             this.intervalChoice3.Size = new System.Drawing.Size(113, 28);
             this.intervalChoice3.TabIndex = 5;
@@ -155,7 +155,7 @@
             this.intervalChoice2.AutoSize = true;
             this.intervalChoice2.Checked = true;
             this.intervalChoice2.Location = new System.Drawing.Point(21, 91);
-            this.intervalChoice2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.intervalChoice2.Margin = new System.Windows.Forms.Padding(4);
             this.intervalChoice2.Name = "intervalChoice2";
             this.intervalChoice2.Size = new System.Drawing.Size(149, 28);
             this.intervalChoice2.TabIndex = 4;
@@ -168,7 +168,7 @@
             // 
             this.intervalChoice1.AutoSize = true;
             this.intervalChoice1.Location = new System.Drawing.Point(21, 43);
-            this.intervalChoice1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.intervalChoice1.Margin = new System.Windows.Forms.Padding(4);
             this.intervalChoice1.Name = "intervalChoice1";
             this.intervalChoice1.Size = new System.Drawing.Size(269, 28);
             this.intervalChoice1.TabIndex = 3;
@@ -189,7 +189,7 @@
             // buttonImportAudio
             // 
             this.buttonImportAudio.Location = new System.Drawing.Point(147, 131);
-            this.buttonImportAudio.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonImportAudio.Margin = new System.Windows.Forms.Padding(4);
             this.buttonImportAudio.Name = "buttonImportAudio";
             this.buttonImportAudio.Size = new System.Drawing.Size(171, 51);
             this.buttonImportAudio.TabIndex = 0;
@@ -202,9 +202,9 @@
             this.groupBox3.Controls.Add(this.orderChoice2);
             this.groupBox3.Controls.Add(this.orderChoice1);
             this.groupBox3.Location = new System.Drawing.Point(989, 411);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox3.Size = new System.Drawing.Size(528, 141);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
@@ -214,7 +214,7 @@
             // 
             this.orderChoice2.AutoSize = true;
             this.orderChoice2.Location = new System.Drawing.Point(21, 91);
-            this.orderChoice2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.orderChoice2.Margin = new System.Windows.Forms.Padding(4);
             this.orderChoice2.Name = "orderChoice2";
             this.orderChoice2.Size = new System.Drawing.Size(137, 28);
             this.orderChoice2.TabIndex = 4;
@@ -227,7 +227,7 @@
             this.orderChoice1.AutoSize = true;
             this.orderChoice1.Checked = true;
             this.orderChoice1.Location = new System.Drawing.Point(21, 43);
-            this.orderChoice1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.orderChoice1.Margin = new System.Windows.Forms.Padding(4);
             this.orderChoice1.Name = "orderChoice1";
             this.orderChoice1.Size = new System.Drawing.Size(137, 28);
             this.orderChoice1.TabIndex = 3;
@@ -239,7 +239,7 @@
             // buttonStart
             // 
             this.buttonStart.Location = new System.Drawing.Point(989, 748);
-            this.buttonStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonStart.Margin = new System.Windows.Forms.Padding(4);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(528, 51);
             this.buttonStart.TabIndex = 4;
@@ -252,9 +252,9 @@
             this.groupBox4.Controls.Add(this.buttonClearCache);
             this.groupBox4.Controls.Add(this.label3);
             this.groupBox4.Location = new System.Drawing.Point(1242, 579);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox4.Size = new System.Drawing.Size(275, 133);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
@@ -263,7 +263,7 @@
             // buttonClearCache
             // 
             this.buttonClearCache.Location = new System.Drawing.Point(8, 72);
-            this.buttonClearCache.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonClearCache.Margin = new System.Windows.Forms.Padding(4);
             this.buttonClearCache.Name = "buttonClearCache";
             this.buttonClearCache.Size = new System.Drawing.Size(259, 51);
             this.buttonClearCache.TabIndex = 6;
@@ -284,7 +284,7 @@
             // progressBar
             // 
             this.progressBar.Location = new System.Drawing.Point(16, 749);
-            this.progressBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(4);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(956, 44);
             this.progressBar.TabIndex = 6;
@@ -295,7 +295,7 @@
             this.textLogBox.DetectUrls = false;
             this.textLogBox.ForeColor = System.Drawing.Color.White;
             this.textLogBox.Location = new System.Drawing.Point(16, 16);
-            this.textLogBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textLogBox.Margin = new System.Windows.Forms.Padding(4);
             this.textLogBox.Name = "textLogBox";
             this.textLogBox.ReadOnly = true;
             this.textLogBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
@@ -303,7 +303,7 @@
             this.textLogBox.TabIndex = 2;
             this.textLogBox.Text = "欢迎使用随舞音频生成器\n本程序使用Excel格式的歌单文件（包含歌名，BV号，剪辑时间）生成随舞音频\n为避免可能的文件冲突，使用时建议先保存并关闭歌单文件\n注意：" +
     "当前版本仅支持使用B站视频，暂不支持其他平台来源\n-------------------------------------------------------" +
-    "---------------------\n";
+    "--------------------\n";
             this.textLogBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textLogBox_Click);
             // 
             // openFileDialog2
@@ -369,19 +369,20 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1528, 808);
+            this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.textLogBox);
-            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "随舞音频生成器";
