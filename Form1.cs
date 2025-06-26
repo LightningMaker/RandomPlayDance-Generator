@@ -232,5 +232,10 @@ namespace RandomPlayDance_Generator_3
         {
             IsUsingDash = true;
         }
+
+        private void checkBoxVol_CheckedChanged(object sender, EventArgs e)
+        {
+            MediaThread.EnableLoudnorm = checkBoxVol.Checked;
+        }
     }
 }

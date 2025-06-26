@@ -18,6 +18,8 @@ namespace RandomPlayDance_Generator_3
 {
     internal class MediaThread
     {
+        public static bool EnableLoudnorm { get; set; } = false;
+
         public void StartProcessing()
         {
             var thread = new Thread(ProcessingThread);
@@ -336,15 +338,30 @@ namespace RandomPlayDance_Generator_3
                 {
                     string customArgument = "-filter_complex \"";
 
-                    for (int i = 0; i < songPaths.Count; i++)
+                    if (EnableLoudnorm)
                     {
-                        customArgument += $"[{i}:0]"; // 只包含音频流
+                        // 对每个输入应用 loudnorm 滤镜
+                        for (int i = 0; i < songPaths.Count; i++)
+                        {
+                            customArgument += $"[{i}:0]loudnorm=I=-16:TP=-1.5:LRA=11[a{i}];";
+                        }
+                        for (int i = 0; i < songPaths.Count; i++)
+                        {
+                            customArgument += $"[a{i}]";
+                        }
+                        customArgument += $"concat=n={songPaths.Count}:v=0:a=1[out]\" -map \"[out]\"";
+                    }
+                    else
+                    {
+                        // 不做音量均衡，直接合并
+                        for (int i = 0; i < songPaths.Count; i++)
+                        {
+                            customArgument += $"[{i}:0]";
+                        }
+                        customArgument += $"concat=n={songPaths.Count}:v=0:a=1[out]\" -map \"[out]\"";
                     }
 
-                    customArgument += $"concat=n={songPaths.Count}:v=0:a=1[out]\" -map \"[out]\"";
-
                     var argument = FFMpegArguments.FromFileInput(songPaths[0]);
-
                     for (int i = 1; i < songPaths.Count; i++)
                     {
                         argument.AddFileInput(songPaths[i]);
@@ -356,16 +373,15 @@ namespace RandomPlayDance_Generator_3
                     {
                         path = "歌单.xlsx";
                     }
-                    string exportFile = Path.Combine(exportPath, Path.GetFileNameWithoutExtension(path) 
+                    string exportFile = Path.Combine(exportPath, Path.GetFileNameWithoutExtension(path)
                         + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".mp3");
-                    
+
                     argument.OutputToFile(exportFile, true, arguments => arguments.WithCustomArgument(customArgument)).ProcessSynchronously();
 
                     Form1.Instance.UpdateLog("已生成随舞音频 " + Path.Combine("\\", exportFile), Form1.LogLevel.Message);
 
                     // 打开文件夹
                     Process.Start("explorer.exe", Path.Combine(Environment.CurrentDirectory, exportPath));
-
                 }
                 catch (Exception ex)
                 {

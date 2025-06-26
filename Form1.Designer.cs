@@ -56,6 +56,8 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.DashDownload = new System.Windows.Forms.RadioButton();
             this.MP4Download = new System.Windows.Forms.RadioButton();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.checkBoxVol = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -63,6 +65,7 @@
             this.groupBox4.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -205,7 +208,7 @@
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(528, 141);
+            this.groupBox3.Size = new System.Drawing.Size(237, 141);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "歌曲顺序";
@@ -365,6 +368,29 @@
             this.MP4Download.UseVisualStyleBackColor = true;
             this.MP4Download.CheckedChanged += new System.EventHandler(this.MP4Download_CheckedChanged);
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.checkBoxVol);
+            this.groupBox6.Location = new System.Drawing.Point(1242, 411);
+            this.groupBox6.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox6.Size = new System.Drawing.Size(273, 141);
+            this.groupBox6.TabIndex = 8;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Beta功能";
+            // 
+            // checkBoxVol
+            // 
+            this.checkBoxVol.AutoSize = true;
+            this.checkBoxVol.Location = new System.Drawing.Point(12, 44);
+            this.checkBoxVol.Name = "checkBoxVol";
+            this.checkBoxVol.Size = new System.Drawing.Size(186, 28);
+            this.checkBoxVol.TabIndex = 0;
+            this.checkBoxVol.Text = "开启音量均衡";
+            this.checkBoxVol.UseVisualStyleBackColor = true;
+            this.checkBoxVol.CheckedChanged += new System.EventHandler(this.checkBoxVol_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
@@ -372,6 +398,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1528, 808);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.groupBox5);
@@ -380,10 +407,8 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "随舞音频生成器";
             this.groupBox1.ResumeLayout(false);
@@ -398,6 +423,8 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -430,6 +457,8 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.RadioButton DashDownload;
         private System.Windows.Forms.RadioButton MP4Download;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.CheckBox checkBoxVol;
     }
 }
 
