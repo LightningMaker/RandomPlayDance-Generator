@@ -160,6 +160,8 @@ namespace RandomPlayDance_Generator_3
                 }
                 #endregion
 
+                int SongSuccessCount = 0;
+                int SongFailCount = 0;
 
                 #region 裁剪乐曲
                 foreach (DataRow row in dtTable.Rows)
@@ -190,6 +192,10 @@ namespace RandomPlayDance_Generator_3
                         {
                             Form1.Instance.UpdateLog("歌曲 " + songName + " 裁剪后文件已损坏，请检查剪辑时间是否填写正确", Form1.LogLevel.Warning);
                         }
+                        else
+                        {
+                            SongSuccessCount++;// 成功计数
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -198,13 +204,18 @@ namespace RandomPlayDance_Generator_3
                         {
                             File.Copy(loadFile, saveFile, true);
                             Form1.Instance.UpdateLog("未填写 " + songName + " 的剪辑时间，默认使用全曲", Form1.LogLevel.Warning);
+
+                            SongSuccessCount++;// 成功计数
                         }
                         catch (Exception exc)
                         {
                             Form1.Instance.UpdateLog(songName + " 文件不存在。错误：" + exc.Message, Form1.LogLevel.Error);
                             Form1.Instance.UpdateLog(ex.StackTrace, Form1.LogLevel.Error);
                             Form1.Instance.UpdateLog("已跳过当前歌曲", Form1.LogLevel.Warning);
+
+                            SongFailCount++;// 失败计数
                         }
+                        
                     }
                 }
 
@@ -277,13 +288,41 @@ namespace RandomPlayDance_Generator_3
                     if (Form1.IntervalMode == 1)
                     {
                         int time = Form1.IntervalTime;
-                        Form1.Instance.UpdateLog($"正在插入空白间隔，时间为{time}秒", Form1.LogLevel.Message);
-                        for (int i = songPaths.Count - 1; i >= 0; i--)
+                        if (time > 0)
                         {
-                            string intervalFile = "assets/BlankAudio.mp3";
-                            for (int j = 0; j < time; j++)
+                            string tempDir = "temp";
+                            if (!Directory.Exists(tempDir))
                             {
-                                // 在每首歌曲前插入空白音频
+                                Directory.CreateDirectory(tempDir);
+                            }
+                            string intervalFile = Path.Combine(tempDir, $"BlankAudio_{time}s.mp3");
+                            string blankSource = "assets/BlankAudio.mp3";
+                            if (!File.Exists(intervalFile))
+                            {
+                                // 构造 N 个输入
+                                var argument = FFMpegArguments.FromFileInput(blankSource);
+                                for (int i = 1; i < time; i++)
+                                {
+                                    argument.AddFileInput(blankSource);
+                                }
+
+                                // 构造 filter_complex
+                                // [0:0][1:0]...[N-1:0]concat=n=N:v=0:a=1[out]
+                                StringBuilder filter = new StringBuilder();
+                                for (int i = 0; i < time; i++)
+                                {
+                                    filter.Append($"[{i}:0]");
+                                }
+                                filter.Append($"concat=n={time}:v=0:a=1[out]");
+
+                                argument.OutputToFile(intervalFile, true, builder =>
+                                {
+                                    builder.WithCustomArgument($"-filter_complex \"{filter}\" -map \"[out]\"");
+                                }).ProcessSynchronously();
+                            }
+                            Form1.Instance.UpdateLog($"正在插入空白间隔，时间为{time}秒", Form1.LogLevel.Message);
+                            for (int i = songPaths.Count - 1; i >= 0; i--)
+                            {
                                 songPaths.Insert(i, intervalFile);
                             }
                         }
@@ -378,10 +417,21 @@ namespace RandomPlayDance_Generator_3
 
                     argument.OutputToFile(exportFile, true, arguments => arguments.WithCustomArgument(customArgument)).ProcessSynchronously();
 
+
+                    // 输出计数
+                    Form1.Instance.UpdateLog($"剪辑成功 {SongSuccessCount} 首，失败 {SongFailCount} 首", Form1.LogLevel.Message);
+
                     Form1.Instance.UpdateLog("已生成随舞音频 " + Path.Combine("\\", exportFile), Form1.LogLevel.Message);
 
-                    // 打开文件夹
-                    Process.Start("explorer.exe", Path.Combine(Environment.CurrentDirectory, exportPath));
+                    try
+                    {
+                        // 打开文件夹
+                        Process.Start("explorer.exe", Path.Combine(Environment.CurrentDirectory, exportPath));
+                    }
+                    catch (Exception ex)
+                    {
+                        Form1.Instance.UpdateLog("打开文件夹失败，请手动打开exports文件夹获取生成的音频文件" + ex.Message, Form1.LogLevel.Warning);
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -135,13 +135,13 @@
         </member>
         <member name="M:SixLabors.ImageSharp.Advanced.AotCompilerTools.AotCompileImageEncoderInternals``1">
             <summary>
-            This method pre-seeds the all <see cref="T:SixLabors.ImageSharp.Formats.IImageEncoderInternals"/> in the AoT compiler.
+            This method pre-seeds the all core encoders in the AoT compiler.
             </summary>
             <typeparam name="TPixel">The pixel format.</typeparam>
         </member>
         <member name="M:SixLabors.ImageSharp.Advanced.AotCompilerTools.AotCompileImageDecoderInternals``1">
             <summary>
-            This method pre-seeds the all <see cref="T:SixLabors.ImageSharp.Formats.IImageDecoderInternals"/> in the AoT compiler.
+            This method pre-seeds the all <see cref="T:SixLabors.ImageSharp.Formats.ImageDecoderCore"/> in the AoT compiler.
             </summary>
             <typeparam name="TPixel">The pixel format.</typeparam>
         </member>
@@ -239,6 +239,12 @@
         <member name="M:SixLabors.ImageSharp.Advanced.AotCompilerTools.AotCompilePixelSamplingStrategys``1">
             <summary>
             This method pre-seeds the <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.IPixelSamplingStrategy" /> in the AoT compiler.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Advanced.AotCompilerTools.AotCompilePixelMaps``1">
+            <summary>
+            This method pre-seeds the all <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.IColorIndexCache`1" /> in the AoT compiler.
             </summary>
             <typeparam name="TPixel">The pixel format.</typeparam>
         </member>
@@ -9663,12 +9669,6 @@
             </summary>
             <param name="options">The options.</param>
         </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Bmp.BmpDecoderCore.Options">
-            <inheritdoc />
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Bmp.BmpDecoderCore.Dimensions">
-            <inheritdoc />
-        </member>
         <member name="M:SixLabors.ImageSharp.Formats.Bmp.BmpDecoderCore.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
@@ -11024,17 +11024,16 @@
             The gif specific metadata.
             </summary>
         </member>
+        <member name="F:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.backgroundColorIndex">
+            <summary>
+            The background color index.
+            </summary>
+        </member>
         <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.#ctor(SixLabors.ImageSharp.Formats.DecoderOptions)">
             <summary>
             Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore"/> class.
             </summary>
             <param name="options">The decoder options.</param>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.Options">
-            <inheritdoc />
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.Dimensions">
-            <inheritdoc />
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -11080,7 +11079,7 @@
             </summary>
             <param name="stream">The <see cref="T:SixLabors.ImageSharp.IO.BufferedReadStream"/> containing image data.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.ReadFrame``1(SixLabors.ImageSharp.IO.BufferedReadStream,SixLabors.ImageSharp.Image{``0}@,SixLabors.ImageSharp.ImageFrame{``0}@)">
+        <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.ReadFrame``1(SixLabors.ImageSharp.IO.BufferedReadStream,SixLabors.ImageSharp.Image{``0}@,SixLabors.ImageSharp.ImageFrame{``0}@,System.Nullable{SixLabors.ImageSharp.Formats.Gif.GifDisposalMethod}@,SixLabors.ImageSharp.Color@)">
             <summary>
             Reads an individual gif frame.
             </summary>
@@ -11088,8 +11087,10 @@
             <param name="stream">The <see cref="T:SixLabors.ImageSharp.IO.BufferedReadStream"/> containing image data.</param>
             <param name="image">The image to decode the information to.</param>
             <param name="previousFrame">The previous frame.</param>
+            <param name="previousDisposalMethod">The previous disposal method.</param>
+            <param name="backgroundColor">The background color.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.ReadFrameColors``1(SixLabors.ImageSharp.IO.BufferedReadStream,SixLabors.ImageSharp.Image{``0}@,SixLabors.ImageSharp.ImageFrame{``0}@,System.ReadOnlySpan{SixLabors.ImageSharp.PixelFormats.Rgb24},SixLabors.ImageSharp.Formats.Gif.GifImageDescriptor@)">
+        <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.ReadFrameColors``1(SixLabors.ImageSharp.IO.BufferedReadStream,SixLabors.ImageSharp.Image{``0}@,SixLabors.ImageSharp.ImageFrame{``0}@,System.Nullable{SixLabors.ImageSharp.Formats.Gif.GifDisposalMethod}@,System.ReadOnlySpan{SixLabors.ImageSharp.PixelFormats.Rgb24},SixLabors.ImageSharp.Formats.Gif.GifImageDescriptor@,``0)">
             <summary>
             Reads the frames colors, mapping indices to colors.
             </summary>
@@ -11097,8 +11098,10 @@
             <param name="stream">The <see cref="T:SixLabors.ImageSharp.IO.BufferedReadStream"/> containing image data.</param>
             <param name="image">The image to decode the information to.</param>
             <param name="previousFrame">The previous frame.</param>
+            <param name="previousDisposalMethod">The previous disposal method.</param>
             <param name="colorTable">The color table containing the available colors.</param>
             <param name="descriptor">The <see cref="T:SixLabors.ImageSharp.Formats.Gif.GifImageDescriptor"/></param>
+            <param name="backgroundPixel">The background color pixel.</param>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.ReadFrameMetadata(SixLabors.ImageSharp.IO.BufferedReadStream,System.Collections.Generic.List{SixLabors.ImageSharp.Metadata.ImageFrameMetadata},SixLabors.ImageSharp.Metadata.ImageFrameMetadata@)">
             <summary>
@@ -11108,12 +11111,14 @@
             <param name="frameMetadata">The collection of frame metadata.</param>
             <param name="previousFrame">The previous frame metadata.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.RestoreToBackground``1(SixLabors.ImageSharp.ImageFrame{``0})">
+        <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.RestoreToBackground``1(SixLabors.ImageSharp.ImageFrame{``0},``0,System.Boolean)">
             <summary>
             Restores the current frame area to the background.
             </summary>
             <typeparam name="TPixel">The pixel format.</typeparam>
             <param name="frame">The frame.</param>
+            <param name="background">The background color.</param>
+            <param name="transparent">Whether the background is transparent.</param>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Gif.GifDecoderCore.SetFrameMetadata(SixLabors.ImageSharp.Metadata.ImageFrameMetadata)">
             <summary>
@@ -11495,22 +11500,22 @@
             The stream to decode.
             </summary>
         </member>
-        <member name="F:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.prefix">
+        <member name="F:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.prefixOwner">
             <summary>
             The prefix buffer.
             </summary>
         </member>
-        <member name="F:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.suffix">
+        <member name="F:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.suffixOwner">
             <summary>
             The suffix buffer.
             </summary>
         </member>
-        <member name="F:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.scratchBuffer">
+        <member name="F:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.bufferOwner">
             <summary>
             The scratch buffer for reading data blocks.
             </summary>
         </member>
-        <member name="F:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.pixelStack">
+        <member name="F:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.pixelStackOwner">
             <summary>
             The pixel stack buffer.
             </summary>
@@ -11546,11 +11551,12 @@
             </summary>
             <param name="length">The resulting index table length.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.ReadBlock(System.Span{System.Byte})">
+        <member name="M:SixLabors.ImageSharp.Formats.Gif.LzwDecoder.ReadBlock(SixLabors.ImageSharp.IO.BufferedReadStream,System.Span{System.Byte})">
             <summary>
             Reads the next data block from the stream. A data block begins with a byte,
             which defines the size of the block, followed by the block itself.
             </summary>
+            <param name="stream">The stream to read from.</param>
             <param name="buffer">The buffer to store the block in.</param>
             <returns>
             The <see cref="T:System.Int32"/>.
@@ -12009,47 +12015,6 @@
             <returns>A <see cref="T:System.Threading.Tasks.Task`1"/> representing the asynchronous operation.</returns>
             <exception cref="T:SixLabors.ImageSharp.ImageFormatException">Thrown if the encoded image contains errors.</exception>
         </member>
-        <member name="T:SixLabors.ImageSharp.Formats.IImageDecoderInternals">
-            <summary>
-            Abstraction for shared internals for XXXDecoderCore implementations to be used with <see cref="T:SixLabors.ImageSharp.Formats.ImageDecoderUtilities"/>.
-            </summary>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.IImageDecoderInternals.Options">
-            <summary>
-            Gets the general decoder options.
-            </summary>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.IImageDecoderInternals.Dimensions">
-            <summary>
-            Gets the dimensions of the image being decoded.
-            </summary>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Formats.IImageDecoderInternals.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
-            <summary>
-            Decodes the image from the specified stream.
-            </summary>
-            <typeparam name="TPixel">The pixel format.</typeparam>
-            <param name="stream">The stream, where the image should be decoded from. Cannot be null.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
-            <returns>The decoded image.</returns>
-            <remarks>
-            Cancellable synchronous method. In case of cancellation,
-            an <see cref="T:System.OperationCanceledException"/> shall be thrown which will be handled on the call site.
-            </remarks>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Formats.IImageDecoderInternals.Identify(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
-            <summary>
-            Reads the raw image information from the specified stream.
-            </summary>
-            <param name="stream">The <see cref="T:SixLabors.ImageSharp.IO.BufferedReadStream"/> containing image data.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>The <see cref="T:SixLabors.ImageSharp.ImageInfo"/>.</returns>
-            <remarks>
-            Cancellable synchronous method. In case of cancellation,
-            an <see cref="T:System.OperationCanceledException"/> shall be thrown which will be handled on the call site.
-            </remarks>
-        </member>
         <member name="T:SixLabors.ImageSharp.Formats.IImageEncoder">
             <summary>
             Defines the contract for all image encoders.
@@ -12077,20 +12042,6 @@
             <param name="stream">The <see cref="T:System.IO.Stream" /> to encode the image data to.</param>
             <param name="cancellationToken">The token to monitor for cancellation requests.</param>
             <returns>A <see cref="T:System.Threading.Tasks.Task" /> representing the asynchronous operation.</returns>
-        </member>
-        <member name="T:SixLabors.ImageSharp.Formats.IImageEncoderInternals">
-            <summary>
-            Abstraction for shared internals for ***DecoderCore implementations.
-            </summary>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Formats.IImageEncoderInternals.Encode``1(SixLabors.ImageSharp.Image{``0},System.IO.Stream,System.Threading.CancellationToken)">
-            <summary>
-            Encodes the image.
-            </summary>
-            <param name="image">The image.</param>
-            <param name="stream">The stream.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <typeparam name="TPixel">The pixel type.</typeparam>
         </member>
         <member name="T:SixLabors.ImageSharp.Formats.IImageFormat">
             <summary>
@@ -12252,10 +12203,73 @@
             <param name="image">The decoded image.</param>
             <returns><see langword="true"/> if the image should be resized, otherwise; <see langword="false"/>.</returns>
         </member>
-        <member name="T:SixLabors.ImageSharp.Formats.ImageDecoderUtilities">
+        <member name="T:SixLabors.ImageSharp.Formats.ImageDecoderCore">
             <summary>
-            Utility methods for <see cref="T:SixLabors.ImageSharp.Formats.IImageDecoderInternals"/>.
+            The base class for all stateful image decoders.
             </summary>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Formats.ImageDecoderCore.#ctor(SixLabors.ImageSharp.Formats.DecoderOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.ImageDecoderCore"/> class.
+            </summary>
+            <param name="options">The general decoder options.</param>
+        </member>
+        <member name="P:SixLabors.ImageSharp.Formats.ImageDecoderCore.Options">
+            <summary>
+            Gets the general decoder options.
+            </summary>
+        </member>
+        <member name="P:SixLabors.ImageSharp.Formats.ImageDecoderCore.Dimensions">
+            <summary>
+            Gets or sets the dimensions of the image being decoded.
+            </summary>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Formats.ImageDecoderCore.Identify(SixLabors.ImageSharp.Configuration,System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Reads the raw image information from the specified stream.
+            </summary>
+            <param name="configuration">The shared configuration.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream" /> containing image data.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>The <see cref="T:SixLabors.ImageSharp.ImageInfo" />.</returns>
+            <exception cref="T:SixLabors.ImageSharp.InvalidImageContentException">Thrown if the encoded image contains errors.</exception>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Formats.ImageDecoderCore.Decode``1(SixLabors.ImageSharp.Configuration,System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Decodes the image from the specified stream to an <see cref="T:SixLabors.ImageSharp.Image`1" /> of a specific pixel type.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="configuration">The shared configuration.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream" /> containing image data.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>The <see cref="T:SixLabors.ImageSharp.Image`1" />.</returns>
+            <exception cref="T:SixLabors.ImageSharp.InvalidImageContentException">Thrown if the encoded image contains errors.</exception>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Formats.ImageDecoderCore.Identify(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
+            <summary>
+            Reads the raw image information from the specified stream.
+            </summary>
+            <param name="stream">The <see cref="T:SixLabors.ImageSharp.IO.BufferedReadStream"/> containing image data.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>The <see cref="T:SixLabors.ImageSharp.ImageInfo"/>.</returns>
+            <remarks>
+            Cancellable synchronous method. In case of cancellation,
+            an <see cref="T:System.OperationCanceledException"/> shall be thrown which will be handled on the call site.
+            </remarks>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Formats.ImageDecoderCore.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
+            <summary>
+            Decodes the image from the specified stream.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="stream">The stream, where the image should be decoded from. Cannot be null.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <returns>The decoded image.</returns>
+            <remarks>
+            Cancellable synchronous method. In case of cancellation, an <see cref="T:System.OperationCanceledException"/> shall
+            be thrown which will be handled on the call site.
+            </remarks>
         </member>
         <member name="T:SixLabors.ImageSharp.Formats.ImageEncoder">
             <summary>
@@ -15317,12 +15331,6 @@
             Gets the only supported precisions
             </summary>
         </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Jpeg.JpegDecoderCore.Options">
-            <inheritdoc />
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Jpeg.JpegDecoderCore.Dimensions">
-            <inheritdoc/>
-        </member>
         <member name="P:SixLabors.ImageSharp.Formats.Jpeg.JpegDecoderCore.Frame">
             <summary>
             Gets the frame
@@ -16199,12 +16207,6 @@
             Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.Pbm.PbmDecoderCore" /> class.
             </summary>
             <param name="options">The decoder options.</param>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Pbm.PbmDecoderCore.Options">
-            <inheritdoc/>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Pbm.PbmDecoderCore.Dimensions">
-            <inheritdoc/>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Pbm.PbmDecoderCore.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
             <inheritdoc/>
@@ -17620,17 +17622,16 @@
             The maximum memory in bytes that a zTXt, sPLT, iTXt, iCCP, or unknown chunk can occupy when decompressed.
             </summary>
         </member>
+        <member name="F:SixLabors.ImageSharp.Formats.Png.PngDecoderCore.hasImageData">
+            <summary>
+            A value indicating whether the image data has been read.
+            </summary>
+        </member>
         <member name="M:SixLabors.ImageSharp.Formats.Png.PngDecoderCore.#ctor(SixLabors.ImageSharp.Formats.Png.PngDecoderOptions)">
             <summary>
             Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.Png.PngDecoderCore"/> class.
             </summary>
             <param name="options">The decoder options.</param>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Png.PngDecoderCore.Options">
-            <inheritdoc/>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Png.PngDecoderCore.Dimensions">
-            <inheritdoc/>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Png.PngDecoderCore.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
             <inheritdoc/>
@@ -17936,6 +17937,21 @@
             The <see cref="T:SixLabors.ImageSharp.Formats.Png.PngChunk"/>.
             </returns>
         </member>
+        <member name="M:SixLabors.ImageSharp.Formats.Png.PngDecoderCore.IsValidChunkType(SixLabors.ImageSharp.Formats.Png.PngChunkType)">
+            <summary>
+            Determines whether the 4-byte chunk type is valid (all ASCII letters).
+            </summary>
+            <param name="type">The chunk type.</param>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Formats.Png.PngDecoderCore.IsAsciiLetter(System.Byte)">
+            <summary>
+            Returns a value indicating whether the given byte is an ASCII letter.
+            </summary>
+            <param name="b">The byte to check.</param>
+            <returns>
+            <see langword="true"/> if the byte is an ASCII letter; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
         <member name="M:SixLabors.ImageSharp.Formats.Png.PngDecoderCore.ValidateChunk(SixLabors.ImageSharp.Formats.Png.PngChunk@,System.Span{System.Byte})">
             <summary>
             Validates the png chunk.
@@ -18032,11 +18048,6 @@
         <member name="T:SixLabors.ImageSharp.Formats.Png.PngEncoder">
             <summary>
             Image encoder for writing image data to a stream in png format.
-            </summary>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoder.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.Png.PngEncoder"/> class.
             </summary>
         </member>
         <member name="P:SixLabors.ImageSharp.Formats.Png.PngEncoder.BitDepth">
@@ -18201,6 +18212,14 @@
             Any explicit quantized transparent index provided by the background color.
             </summary>
         </member>
+        <member name="F:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.backgroundColor">
+            <summary>
+            The default background color of the canvas when animating.
+            This color may be used to fill the unused space on the canvas around the frames,
+            as well as the transparent pixels of the first frame.
+            The background color is also used when a frame disposal mode is <see cref="F:SixLabors.ImageSharp.Formats.Png.PngDisposalMethod.RestoreToBackground"/>.
+            </summary>
+        </member>
         <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.#ctor(SixLabors.ImageSharp.Configuration,SixLabors.ImageSharp.Formats.Png.PngEncoder)">
             <summary>
             Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.Png.PngEncoderCore" /> class.
@@ -18220,22 +18239,24 @@
         <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.Dispose">
             <inheritdoc />
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.ClearTransparentPixels``1(SixLabors.ImageSharp.ImageFrame{``0})">
+        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.ClearTransparentPixels``1(SixLabors.ImageSharp.Memory.Buffer2DRegion{``0}@,SixLabors.ImageSharp.Color)">
             <summary>
             Convert transparent pixels, to transparent black pixels, which can yield to better compression in some cases.
             </summary>
             <typeparam name="TPixel">The type of the pixel.</typeparam>
             <param name="clone">The cloned image frame where the transparent pixels will be changed.</param>
+            <param name="color">The color to change transparent pixels to.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.CreateQuantizedImageAndUpdateBitDepth``1(SixLabors.ImageSharp.Formats.Png.PngMetadata,SixLabors.ImageSharp.ImageFrame{``0},SixLabors.ImageSharp.Rectangle,System.Nullable{System.ReadOnlyMemory{``0}})">
+        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.CreateQuantizedImageAndUpdateBitDepth``1(SixLabors.ImageSharp.Formats.Png.PngMetadata,SixLabors.ImageSharp.Image{``0},SixLabors.ImageSharp.ImageFrame{``0},SixLabors.ImageSharp.Rectangle,System.Nullable{SixLabors.ImageSharp.Processing.Processors.Quantization.PaletteQuantizer{``0}})">
             <summary>
             Creates the quantized image and calculates and sets the bit depth.
             </summary>
             <typeparam name="TPixel">The type of the pixel.</typeparam>
             <param name="metadata">The image metadata.</param>
-            <param name="frame">The frame to quantize.</param>
+            <param name="image">The image.</param>
+            <param name="frame">The current image frame.</param>
             <param name="bounds">The area of interest within the frame.</param>
-            <param name="previousPalette">Any previously derived palette.</param>
+            <param name="paletteQuantizer">The quantizer containing any previously derived palette.</param>
             <returns>The quantized image.</returns>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.CollectGrayscaleBytes``1(System.ReadOnlySpan{``0})">
@@ -18346,6 +18367,7 @@
             </summary>
             <param name="stream">The <see cref="T:System.IO.Stream"/> containing image data.</param>
             <param name="metaData">The image meta data.</param>
+            <exception cref="T:System.NotSupportedException">CICP matrix coefficients other than Identity are not supported in PNG.</exception>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.WriteColorProfileChunk(System.IO.Stream,SixLabors.ImageSharp.Metadata.ImageMetadata)">
             <summary>
@@ -18393,7 +18415,7 @@
             <param name="bounds">The frame area of interest.</param>
             <param name="sequenceNumber">The frame sequence number.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.WriteDataChunks``1(SixLabors.ImageSharp.Formats.Png.Chunks.FrameControl,SixLabors.ImageSharp.Memory.Buffer2DRegion{``0},SixLabors.ImageSharp.IndexedImageFrame{``0},System.IO.Stream,System.Boolean)">
+        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.WriteDataChunks``1(SixLabors.ImageSharp.Formats.Png.Chunks.FrameControl@,SixLabors.ImageSharp.Memory.Buffer2DRegion{``0}@,SixLabors.ImageSharp.IndexedImageFrame{``0},System.IO.Stream,System.Boolean)">
             <summary>
             Writes the pixel information to the stream.
             </summary>
@@ -18410,7 +18432,7 @@
             </summary>
             <param name="bytesPerScanline">The bytes per scanline.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.EncodePixels``1(SixLabors.ImageSharp.Memory.Buffer2DRegion{``0},SixLabors.ImageSharp.IndexedImageFrame{``0},SixLabors.ImageSharp.Compression.Zlib.ZlibDeflateStream)">
+        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.EncodePixels``1(SixLabors.ImageSharp.Memory.Buffer2DRegion{``0}@,SixLabors.ImageSharp.IndexedImageFrame{``0},SixLabors.ImageSharp.Compression.Zlib.ZlibDeflateStream)">
             <summary>
             Encodes the pixels.
             </summary>
@@ -18419,7 +18441,7 @@
             <param name="quantized">The quantized pixels.</param>
             <param name="deflateStream">The deflate stream.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.EncodeAdam7Pixels``1(SixLabors.ImageSharp.Memory.Buffer2DRegion{``0},SixLabors.ImageSharp.Compression.Zlib.ZlibDeflateStream)">
+        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.EncodeAdam7Pixels``1(SixLabors.ImageSharp.Memory.Buffer2DRegion{``0}@,SixLabors.ImageSharp.Compression.Zlib.ZlibDeflateStream)">
             <summary>
             Interlaced encoding the pixels.
             </summary>
@@ -18488,7 +18510,7 @@
             <param name="use16Bit">if set to <c>true</c> [use16 bit].</param>
             <param name="bytesPerPixel">The bytes per pixel.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.CreateQuantizedFrame``1(SixLabors.ImageSharp.Formats.QuantizingImageEncoder,SixLabors.ImageSharp.Formats.Png.PngColorType,System.Byte,SixLabors.ImageSharp.Formats.Png.PngMetadata,SixLabors.ImageSharp.ImageFrame{``0},SixLabors.ImageSharp.Rectangle,System.Nullable{System.ReadOnlyMemory{``0}})">
+        <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.CreateQuantizedFrame``1(SixLabors.ImageSharp.Formats.Png.PngEncoder,SixLabors.ImageSharp.Formats.Png.PngColorType,System.Byte,SixLabors.ImageSharp.Formats.Png.PngMetadata,SixLabors.ImageSharp.Image{``0},SixLabors.ImageSharp.ImageFrame{``0},SixLabors.ImageSharp.Rectangle,System.Nullable{SixLabors.ImageSharp.Processing.Processors.Quantization.PaletteQuantizer{``0}},SixLabors.ImageSharp.Color)">
             <summary>
             Creates the quantized frame.
             </summary>
@@ -18497,9 +18519,11 @@
             <param name="colorType">The color type.</param>
             <param name="bitDepth">The bits per component.</param>
             <param name="metadata">The image metadata.</param>
-            <param name="frame">The frame to quantize.</param>
+            <param name="image">The image.</param>
+            <param name="frame">The current image frame.</param>
             <param name="bounds">The frame area of interest.</param>
-            <param name="previousPalette">Any previously derived palette.</param>
+            <param name="paletteQuantizer">The quantizer containing any previously derived palette.</param>
+            <param name="backgroundColor">The background color.</param>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Png.PngEncoderCore.CalculateBitDepth``1(SixLabors.ImageSharp.Formats.Png.PngColorType,System.Byte,SixLabors.ImageSharp.IndexedImageFrame{``0})">
             <summary>
@@ -18962,7 +18986,13 @@
             <param name="configuration">The configuration of the Encoder.</param>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Qoi.QoiEncoderCore.Encode``1(SixLabors.ImageSharp.Image{``0},System.IO.Stream,System.Threading.CancellationToken)">
-            <inheritdoc />
+            <summary>
+            Encodes the image to the specified stream from the <see cref="T:SixLabors.ImageSharp.ImageFrame`1"/>.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="image">The <see cref="T:SixLabors.ImageSharp.ImageFrame`1"/> to encode from.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to encode the image data to.</param>
+            <param name="cancellationToken">The token to request cancellation.</param>
         </member>
         <member name="T:SixLabors.ImageSharp.Formats.Qoi.QoiFormat">
             <summary>
@@ -19256,12 +19286,6 @@
             Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.Tga.TgaDecoderCore"/> class.
             </summary>
             <param name="options">The options.</param>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Tga.TgaDecoderCore.Options">
-            <inheritdoc />
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Tga.TgaDecoderCore.Dimensions">
-            <inheritdoc />
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Tga.TgaDecoderCore.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -20170,7 +20194,7 @@
             Note that the 'OldDeflate' compression type is identical to the 'Deflate' compression type.
             </remarks>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.Decompressors.DeflateTiffCompression.#ctor(SixLabors.ImageSharp.Memory.MemoryAllocator,System.Int32,System.Int32,SixLabors.ImageSharp.Formats.Tiff.PhotometricInterpretation.TiffColorType,SixLabors.ImageSharp.Formats.Tiff.Constants.TiffPredictor,System.Boolean)">
+        <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.Decompressors.DeflateTiffCompression.#ctor(SixLabors.ImageSharp.Memory.MemoryAllocator,System.Int32,System.Int32,SixLabors.ImageSharp.Formats.Tiff.PhotometricInterpretation.TiffColorType,SixLabors.ImageSharp.Formats.Tiff.Constants.TiffPredictor,System.Boolean,System.Boolean,System.Int32,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.Tiff.Compression.Decompressors.DeflateTiffCompression" /> class.
             </summary>
@@ -20180,6 +20204,9 @@
             <param name="colorType">The color type of the pixel data.</param>
             <param name="predictor">The tiff predictor used.</param>
             <param name="isBigEndian">if set to <c>true</c> decodes the pixel data as big endian, otherwise as little endian.</param>
+            <param name="isTiled">Flag indicates, if the image is a tiled image.</param>
+            <param name="tileWidth">Number of pixels in a tile row.</param>
+            <param name="tileHeight">Number of rows in a tile.</param>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.Decompressors.DeflateTiffCompression.Decompress(SixLabors.ImageSharp.IO.BufferedReadStream,System.Int32,System.Int32,System.Span{System.Byte},System.Threading.CancellationToken)">
             <inheritdoc/>
@@ -20265,7 +20292,7 @@
             Class to handle cases where TIFF image data is compressed using LZW compression.
             </summary>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.Decompressors.LzwTiffCompression.#ctor(SixLabors.ImageSharp.Memory.MemoryAllocator,System.Int32,System.Int32,SixLabors.ImageSharp.Formats.Tiff.PhotometricInterpretation.TiffColorType,SixLabors.ImageSharp.Formats.Tiff.Constants.TiffPredictor,System.Boolean)">
+        <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.Decompressors.LzwTiffCompression.#ctor(SixLabors.ImageSharp.Memory.MemoryAllocator,System.Int32,System.Int32,SixLabors.ImageSharp.Formats.Tiff.PhotometricInterpretation.TiffColorType,SixLabors.ImageSharp.Formats.Tiff.Constants.TiffPredictor,System.Boolean,System.Boolean,System.Int32,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Formats.Tiff.Compression.Decompressors.LzwTiffCompression" /> class.
             </summary>
@@ -20275,6 +20302,9 @@
             <param name="colorType">The color type of the pixel data.</param>
             <param name="predictor">The tiff predictor used.</param>
             <param name="isBigEndian">if set to <c>true</c> decodes the pixel data as big endian, otherwise as little endian.</param>
+            <param name="isTiled">Flag indicates, if the image is a tiled image.</param>
+            <param name="tileWidth">Number of pixels in a tile row.</param>
+            <param name="tileHeight">Number of rows in a tile.</param>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.Decompressors.LzwTiffCompression.Decompress(SixLabors.ImageSharp.IO.BufferedReadStream,System.Int32,System.Int32,System.Span{System.Byte},System.Threading.CancellationToken)">
             <inheritdoc/>
@@ -20769,10 +20799,30 @@
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.HorizontalPredictor.Undo(System.Span{System.Byte},System.Int32,SixLabors.ImageSharp.Formats.Tiff.PhotometricInterpretation.TiffColorType,System.Boolean)">
             <summary>
-            Inverts the horizontal prediction.
+            Inverts the horizontal predictor.
             </summary>
             <param name="pixelBytes">Buffer with decompressed pixel data.</param>
             <param name="width">The width of the image or strip.</param>
+            <param name="colorType">The color type of the pixel data.</param>
+            <param name="isBigEndian">If set to <c>true</c> decodes the pixel data as big endian, otherwise as little endian.</param>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.HorizontalPredictor.UndoTile(System.Span{System.Byte},System.Int32,System.Int32,SixLabors.ImageSharp.Formats.Tiff.PhotometricInterpretation.TiffColorType,System.Boolean)">
+            <summary>
+            Inverts the horizontal predictor for each tile row.
+            </summary>
+            <param name="pixelBytes">Buffer with decompressed pixel data for a tile.</param>
+            <param name="tileWidth">Tile width in pixels.</param>
+            <param name="tileHeight">Tile height in pixels.</param>
+            <param name="colorType">The color type of the pixel data.</param>
+            <param name="isBigEndian">If set to <c>true</c> decodes the pixel data as big endian, otherwise as little endian.</param>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Formats.Tiff.Compression.HorizontalPredictor.UndoRow(System.Span{System.Byte},System.Int32,System.Int32,SixLabors.ImageSharp.Formats.Tiff.PhotometricInterpretation.TiffColorType,System.Boolean)">
+            <summary>
+            Inverts the horizontal predictor for one row.
+            </summary>
+            <param name="pixelBytes">Buffer with decompressed pixel data.</param>
+            <param name="width">The width in pixels of the row.</param>
+            <param name="y">The row index.</param>
             <param name="colorType">The color type of the pixel data.</param>
             <param name="isBigEndian">If set to <c>true</c> decodes the pixel data as big endian, otherwise as little endian.</param>
         </member>
@@ -22671,12 +22721,6 @@
             Gets or sets the horizontal predictor.
             </summary>
         </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Tiff.TiffDecoderCore.Options">
-            <inheritdoc/>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Tiff.TiffDecoderCore.Dimensions">
-            <inheritdoc/>
-        </member>
         <member name="M:SixLabors.ImageSharp.Formats.Tiff.TiffDecoderCore.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
@@ -22748,7 +22792,7 @@
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Tiff.TiffDecoderCore.DecodeTilesChunky``1(SixLabors.ImageSharp.ImageFrame{``0},System.Int32,System.Int32,System.Int32,System.Int32,System.Span{System.UInt64},System.Span{System.UInt64},System.Threading.CancellationToken)">
             <summary>
-            Decodes the image data for Tiff's which arrange the pixel data in tiles and the chunky configuration.
+            Decodes the image data for TIFFs which arrange the pixel data in tiles and the chunky configuration.
             </summary>
             <typeparam name="TPixel">The pixel format.</typeparam>
             <param name="frame">The image frame to decode into.</param>
@@ -23002,6 +23046,12 @@
             <summary>
             The extra data is unassociated alpha data is transparency information that logically exists independent of an image;
             it is commonly called a soft matte.
+            </summary>
+        </member>
+        <member name="F:SixLabors.ImageSharp.Formats.Tiff.TiffExtraSampleType.CorelDrawUnassociatedAlphaData">
+            <summary>
+            A CorelDRAW-specific value observed in damaged files, indicating unassociated alpha.
+            Not part of the official TIFF specification; patched in ImageSharp for compatibility.
             </summary>
         </member>
         <member name="T:SixLabors.ImageSharp.Formats.Tiff.TiffFormat">
@@ -23423,11 +23473,12 @@
             <param name="dst">The destination to store the filtered data.</param>
             <param name="stride">The stride to use.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Webp.AlphaDecoder.ExtractAlphaRows(SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LDecoder)">
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.AlphaDecoder.ExtractAlphaRows(SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LDecoder,System.Int32)">
             <summary>
             Once the image-stream is decoded into ARGB color values, the transparency information will be extracted from the green channel of the ARGB quadruplet.
             </summary>
             <param name="dec">The VP8L decoder.</param>
+            <param name="width">The image width.</param>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Webp.AlphaDecoder.Is8BOptimizable(SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LMetadata)">
             <summary>
@@ -24255,7 +24306,7 @@
             merged with a third one.
             </summary>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Webp.Lossless.HistogramEncoder.HistoListUpdateHead(System.Collections.Generic.List{SixLabors.ImageSharp.Formats.Webp.Lossless.HistogramPair},SixLabors.ImageSharp.Formats.Webp.Lossless.HistogramPair)">
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.Lossless.HistogramEncoder.HistoListUpdateHead(System.Collections.Generic.List{SixLabors.ImageSharp.Formats.Webp.Lossless.HistogramPair},SixLabors.ImageSharp.Formats.Webp.Lossless.HistogramPair,System.Int32)">
             <summary>
             Check whether a pair in the list should be updated as head or not.
             </summary>
@@ -24488,13 +24539,14 @@
             </summary>
             <param name="pixelData">The pixel data to apply the transformation.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Webp.Lossless.LosslessUtils.ColorIndexInverseTransform(SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LTransform,System.Span{System.UInt32})">
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.Lossless.LosslessUtils.ColorIndexInverseTransform(SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LTransform,System.Span{System.UInt32},System.Span{System.UInt32})">
             <summary>
             If there are not many unique pixel values, it is more efficient to create a color index array and replace the pixel values by the array's indices.
             This will reverse the color index transform.
             </summary>
             <param name="transform">The transform data contains color table size and the entries in the color table.</param>
             <param name="pixelData">The pixel data to apply the reverse transform on.</param>
+            <param name="outputSpan">The resulting pixel data with the reversed transformation data.</param>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Webp.Lossless.LosslessUtils.ColorSpaceInverseTransform(SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LTransform,System.Span{System.UInt32})">
             <summary>
@@ -24633,15 +24685,8 @@
             (the actual quantization level depends on smoothness near the given pixel).
             </summary>
         </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LBackwardRefs.BlockSize">
-            <summary>
-            Gets or sets the common block-size.
-            </summary>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LBackwardRefs.Refs">
-            <summary>
-            Gets the backward references.
-            </summary>
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LBackwardRefs.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LBitEntropy">
             <summary>
@@ -25164,7 +25209,7 @@
             </summary>
             <param name="refs">The backward references.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LHistogram.AddSinglePixOrCopy(SixLabors.ImageSharp.Formats.Webp.Lossless.PixOrCopy,System.Boolean,System.Int32)">
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.Lossless.Vp8LHistogram.AddSinglePixOrCopy(SixLabors.ImageSharp.Formats.Webp.Lossless.PixOrCopy@,System.Boolean,System.Int32)">
             <summary>
             Accumulate a token 'v' into a histogram.
             </summary>
@@ -26810,7 +26855,7 @@
             <param name="height">The height of the image.</param>
             <param name="completeDataSize">The size of the image data in bytes.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpAnimationDecoder.ReadFrame``1(SixLabors.ImageSharp.IO.BufferedReadStream,SixLabors.ImageSharp.Image{``0}@,SixLabors.ImageSharp.ImageFrame{``0}@,System.UInt32,System.UInt32,SixLabors.ImageSharp.Color)">
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpAnimationDecoder.ReadFrame``1(SixLabors.ImageSharp.IO.BufferedReadStream,SixLabors.ImageSharp.Image{``0}@,SixLabors.ImageSharp.ImageFrame{``0}@,System.Nullable{SixLabors.ImageSharp.Formats.Webp.Chunks.WebpFrameData}@,System.UInt32,System.UInt32,``0)">
             <summary>
             Reads an individual webp frame.
             </summary>
@@ -26818,6 +26863,7 @@
             <param name="stream">The stream, where the image should be decoded from. Cannot be null.</param>
             <param name="image">The image to decode the information to.</param>
             <param name="previousFrame">The previous frame.</param>
+            <param name="prevFrameData">The previous frame data.</param>
             <param name="width">The width of the image.</param>
             <param name="height">The height of the image.</param>
             <param name="backgroundColor">The default background color of the canvas in.</param>
@@ -26851,10 +26897,10 @@
             <typeparam name="TPixel">The type of the pixel.</typeparam>
             <param name="decodedImageFrame">The decoded image.</param>
             <param name="imageFrame">The image frame to draw into.</param>
-            <param name="restoreArea">The area of the frame.</param>
+            <param name="interest">The area of the frame to draw to.</param>
             <param name="blend">Whether to blend the decoded frame data onto the target frame.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpAnimationDecoder.RestoreToBackground``1(SixLabors.ImageSharp.ImageFrame{``0},SixLabors.ImageSharp.Color)">
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpAnimationDecoder.RestoreToBackground``1(SixLabors.ImageSharp.ImageFrame{``0},``0)">
             <summary>
             Dispose to background color. Fill the rectangle on the canvas covered by the current frame
             with background color specified in the ANIM chunk.
@@ -26886,16 +26932,16 @@
             Indicates how transparent pixels of the current frame are to be blended with corresponding pixels of the previous canvas.
             </summary>
         </member>
-        <member name="F:SixLabors.ImageSharp.Formats.Webp.WebpBlendMethod.Source">
-            <summary>
-            Do not blend. After disposing of the previous frame,
-            render the current frame on the canvas by overwriting the rectangle covered by the current frame.
-            </summary>
-        </member>
         <member name="F:SixLabors.ImageSharp.Formats.Webp.WebpBlendMethod.Over">
             <summary>
             Use alpha blending. After disposing of the previous frame, render the current frame on the canvas using alpha-blending.
             If the current frame does not have an alpha channel, assume alpha value of 255, effectively replacing the rectangle.
+            </summary>
+        </member>
+        <member name="F:SixLabors.ImageSharp.Formats.Webp.WebpBlendMethod.Source">
+            <summary>
+            Do not blend. After disposing of the previous frame,
+            render the current frame on the canvas by overwriting the rectangle covered by the current frame.
             </summary>
         </member>
         <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpChunkParsingUtils.ReadVp8Header(SixLabors.ImageSharp.Memory.MemoryAllocator,SixLabors.ImageSharp.IO.BufferedReadStream,System.Span{System.Byte},SixLabors.ImageSharp.Formats.Webp.WebpFeatures)">
@@ -27035,7 +27081,7 @@
             Utility methods for lossy and lossless webp format.
             </summary>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpCommonUtils.CheckNonOpaque(System.Span{SixLabors.ImageSharp.PixelFormats.Bgra32})">
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpCommonUtils.CheckNonOpaque(System.ReadOnlySpan{SixLabors.ImageSharp.PixelFormats.Bgra32})">
             <summary>
             Checks if the pixel row is not opaque.
             </summary>
@@ -27294,12 +27340,6 @@
             </summary>
             <param name="options">The decoder options.</param>
         </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Webp.WebpDecoderCore.Options">
-            <inheritdoc/>
-        </member>
-        <member name="P:SixLabors.ImageSharp.Formats.Webp.WebpDecoderCore.Dimensions">
-            <inheritdoc/>
-        </member>
         <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpDecoderCore.Decode``1(SixLabors.ImageSharp.IO.BufferedReadStream,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
@@ -27395,13 +27435,14 @@
             Thrown if the input stream is not valid.
             </exception>
         </member>
-        <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpDecoderCore.ReadChunkSize(SixLabors.ImageSharp.IO.BufferedReadStream,System.Span{System.Byte})">
+        <member name="M:SixLabors.ImageSharp.Formats.Webp.WebpDecoderCore.ReadChunkSize(SixLabors.ImageSharp.IO.BufferedReadStream,System.Span{System.Byte},System.Boolean)">
             <summary>
             Reads the chunk size. If Chunk Size is odd, a single padding byte will be added to the payload,
             so the chunk size will be increased by 1 in those cases.
             </summary>
             <param name="stream">The stream to decode from.</param>
             <param name="buffer">Temporary buffer.</param>
+            <param name="required">If true, the chunk size is required to be read, otherwise it can be skipped.</param>
             <returns>The chunk size in bytes.</returns>
             <exception cref="T:SixLabors.ImageSharp.ImageFormatException">Invalid data.</exception>
         </member>
@@ -31381,16 +31422,16 @@
         <member name="P:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Position">
             <inheritdoc/>
         </member>
+        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Flush">
+            <inheritdoc/>
+        </member>
         <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Seek(System.Int64,System.IO.SeekOrigin)">
             <inheritdoc/>
         </member>
         <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.SetLength(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Dispose(System.Boolean)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Flush">
+        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.ReadByte">
             <inheritdoc/>
         </member>
         <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Read(System.Byte[],System.Int32,System.Int32)">
@@ -31399,7 +31440,7 @@
         <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Read(System.Span{System.Byte})">
             <inheritdoc/>
         </member>
-        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.ReadByte">
+        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.WriteByte(System.Byte)">
             <inheritdoc/>
         </member>
         <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Write(System.Byte[],System.Int32,System.Int32)">
@@ -31408,20 +31449,22 @@
         <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Write(System.ReadOnlySpan{System.Byte})">
             <inheritdoc/>
         </member>
-        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.WriteByte(System.Byte)">
-            <inheritdoc/>
+        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.WriteTo(System.IO.Stream)">
+            <summary>
+            Writes the entire contents of this memory stream to another stream.
+            </summary>
+            <param name="stream">The stream to write this memory stream to.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ObjectDisposedException">The current or target stream is closed.</exception>
         </member>
         <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.ToArray">
             <summary>
-            Copy entire buffer into an array.
+            Writes the stream contents to a byte array, regardless of the <see cref="P:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Position"/> property.
             </summary>
-            <returns>The <see cref="T:byte[]"/>.</returns>
+            <returns>A new <see cref="T:byte[]"/>.</returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.WriteTo(System.IO.Stream)">
-            <summary>
-            Write remainder of this stream to another stream.
-            </summary>
-            <param name="stream">The stream to write to.</param>
+        <member name="M:SixLabors.ImageSharp.IO.ChunkedMemoryStream.Dispose(System.Boolean)">
+            <inheritdoc/>
         </member>
         <member name="T:SixLabors.ImageSharp.IO.IFileSystem">
             <summary>
@@ -31754,6 +31797,16 @@
             <param name="buffer">The buffer.</param>
             <typeparam name="T">The element type.</typeparam>
             <returns>The MemoryGroup.</returns>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Memory.Buffer2DExtensions.CloneRegion``1(SixLabors.ImageSharp.Memory.Buffer2D{``0},SixLabors.ImageSharp.Configuration,SixLabors.ImageSharp.Rectangle)">
+            <summary>
+            Performs a deep clone of the buffer covering the specified <paramref name="rectangle"/>.
+            </summary>
+            <typeparam name="T">The element type.</typeparam>
+            <param name="source">The source buffer.</param>
+            <param name="configuration">The configuration.</param>
+            <param name="rectangle">The rectangle to clone.</param>
+            <returns>The <see cref="T:SixLabors.ImageSharp.Memory.Buffer2D`1"/>.</returns>
         </member>
         <member name="M:SixLabors.ImageSharp.Memory.Buffer2DExtensions.DangerousCopyColumns``1(SixLabors.ImageSharp.Memory.Buffer2D{``0},System.Int32,System.Int32,System.Int32)">
             <summary>
@@ -34715,12 +34768,6 @@
         <member name="F:SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTagValue.GPSIFDOffset">
             <summary>
             GPSIFDOffset
-            </summary>
-        </member>
-        <member name="F:SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTagValue.InteroperabilityIndex">
-            <summary>
-            Indicates the identification of the Interoperability rule.
-            See https://www.awaresystems.be/imaging/tiff/tifftags/privateifd/interoperability/interoperabilityindex.html
             </summary>
         </member>
         <member name="F:SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTagValue.SubfileType">
@@ -57571,6 +57618,24 @@
             A helper class for constructing <see cref="T:System.Numerics.Matrix3x2"/> instances for use in affine transforms.
             </summary>
         </member>
+        <member name="M:SixLabors.ImageSharp.Processing.AffineTransformBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Processing.AffineTransformBuilder"/> class.
+            </summary>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.AffineTransformBuilder.#ctor(SixLabors.ImageSharp.Processing.TransformSpace)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Processing.AffineTransformBuilder"/> class.
+            </summary>
+            <param name="transformSpace">
+            The <see cref="P:SixLabors.ImageSharp.Processing.AffineTransformBuilder.TransformSpace"/> to use when applying the affine transform.
+            </param>
+        </member>
+        <member name="P:SixLabors.ImageSharp.Processing.AffineTransformBuilder.TransformSpace">
+            <summary>
+            Gets the <see cref="P:SixLabors.ImageSharp.Processing.AffineTransformBuilder.TransformSpace"/> to use when applying the affine transform.
+            </summary>
+        </member>
         <member name="M:SixLabors.ImageSharp.Processing.AffineTransformBuilder.PrependRotationDegrees(System.Single)">
             <summary>
             Prepends a rotation matrix using the given rotation angle in degrees
@@ -64761,6 +64826,29 @@
         <member name="M:SixLabors.ImageSharp.Processing.Processors.Overlays.VignetteProcessor`1.RowOperation.GetRequiredBufferLength(SixLabors.ImageSharp.Rectangle)">
             <inheritdoc/>
         </member>
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.ColorMatchingMode">
+            <summary>
+            Defines the precision level used when matching colors during quantization.
+            </summary>
+        </member>
+        <member name="F:SixLabors.ImageSharp.Processing.Processors.Quantization.ColorMatchingMode.Coarse">
+            <summary>
+            Uses a coarse caching strategy optimized for performance at the expense of exact matches.
+            This provides the fastest matching but may yield approximate results.
+            </summary>
+        </member>
+        <member name="F:SixLabors.ImageSharp.Processing.Processors.Quantization.ColorMatchingMode.Hybrid">
+            <summary>
+            Enables an exact color match cache for the first 512 unique colors encountered,
+            falling back to coarse matching thereafter.
+            </summary>
+        </member>
+        <member name="F:SixLabors.ImageSharp.Processing.Processors.Quantization.ColorMatchingMode.Exact">
+            <summary>
+            Performs exact color matching without any caching optimizations.
+            This is the slowest but most accurate matching strategy.
+            </summary>
+        </member>
         <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.DefaultPixelSamplingStrategy">
             <summary>
             A pixel sampling strategy that enumerates a limited amount of rows from different frames,
@@ -64796,88 +64884,90 @@
         <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.DefaultPixelSamplingStrategy.EnumeratePixelRegions``1(SixLabors.ImageSharp.ImageFrame{``0})">
             <inheritdoc />
         </member>
-        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1">
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`2">
             <summary>
             Gets the closest color to the supplied color based upon the Euclidean distance.
             </summary>
             <typeparam name="TPixel">The pixel format.</typeparam>
+            <typeparam name="TCache">The cache type.</typeparam>
             <para>
             This class is not thread safe and should not be accessed in parallel.
             Doing so will result in non-idempotent results.
             </para>
         </member>
-        <member name="F:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.cache">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`2.#ctor(SixLabors.ImageSharp.Configuration,System.ReadOnlyMemory{`0},System.Int32)">
             <summary>
-            Do not make this readonly! Struct value would be always copied on non-readonly method calls.
-            </summary>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.#ctor(SixLabors.ImageSharp.Configuration,System.ReadOnlyMemory{`0})">
-            <summary>
-            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1"/> class.
-            </summary>
-            <param name="configuration">The configuration.</param>
-            <param name="palette">The color palette to map from.</param>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.#ctor(SixLabors.ImageSharp.Configuration,System.ReadOnlyMemory{`0},System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1"/> class.
+            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`2"/> class.
             </summary>
             <param name="configuration">The configuration.</param>
             <param name="palette">The color palette to map from.</param>
             <param name="transparentIndex">An explicit index at which to match transparent pixels.</param>
         </member>
-        <member name="P:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.Palette">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`2.GetClosestColor(`0,`0@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`2.Clear(System.ReadOnlyMemory{`0})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`2.SetTransparentIndex(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`2.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1">
             <summary>
-            Gets the color palette of this <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1"/>.
-            The palette memory is owned by the palette source that created it.
+            Represents a map of colors to indices.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+        </member>
+        <member name="P:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1.Palette">
+            <summary>
+            Gets the color palette of this <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1"/>.
             </summary>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.GetClosestColor(`0,`0@)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1.GetClosestColor(`0,`0@)">
             <summary>
             Returns the closest color in the palette and the index of that pixel.
-            The palette contents must match the one used in the constructor.
             </summary>
             <param name="color">The color to match.</param>
             <param name="match">The matched color.</param>
-            <returns>The <see cref="T:System.Int32"/> index.</returns>
+            <returns>
+            The <see cref="T:System.Int32"/> index.
+            </returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.Clear(System.ReadOnlyMemory{`0})">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1.Clear(System.ReadOnlyMemory{`0})">
             <summary>
             Clears the map, resetting it to use the given palette.
             </summary>
             <param name="palette">The color palette to map from.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.SetTransparentIndex(System.Int32)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1.SetTransparentIndex(System.Int32)">
             <summary>
             Allows setting the transparent index after construction.
             </summary>
             <param name="index">An explicit index at which to match transparent pixels.</param>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.DistanceSquared(SixLabors.ImageSharp.PixelFormats.Rgba32,SixLabors.ImageSharp.PixelFormats.Rgba32)">
-            <summary>
-            Returns the Euclidean distance squared between two specified points.
-            </summary>
-            <param name="a">The first point.</param>
-            <param name="b">The second point.</param>
-            <returns>The distance squared.</returns>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1.Dispose">
+            <inheritdoc/>
         </member>
-        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.ColorDistanceCache">
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMapFactory">
             <summary>
-            A cache for storing color distance matching results.
+            A factory for creating <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1"/> instances.
             </summary>
-            <remarks>
-            <para>
-            The granularity of the cache has been determined based upon the current
-            suite of test images and provides the lowest possible memory usage while
-            providing enough match accuracy.
-            Entry count is currently limited to 2335905 entries (4MB).
-            </para>
-            </remarks>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.EuclideanPixelMap`1.ColorDistanceCache.Clear">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMapFactory.Create``1(SixLabors.ImageSharp.Configuration,System.ReadOnlyMemory{``0},SixLabors.ImageSharp.Processing.Processors.Quantization.ColorMatchingMode,System.Int32)">
             <summary>
-            Clears the cache resetting each entry to empty.
+            Creates a new <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1"/> instance.
             </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="configuration">The configuration.</param>
+            <param name="palette">The color palette to map from.</param>
+            <param name="colorMatchingMode">The color matching mode.</param>
+            <param name="transparentIndex">An explicit index at which to match transparent pixels.</param>
+            <returns>
+            The <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.PixelMap`1"/>.
+            </returns>
         </member>
         <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.ExtensivePixelSamplingStrategy">
             <summary>
@@ -64889,6 +64979,96 @@
         </member>
         <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.ExtensivePixelSamplingStrategy.EnumeratePixelRegions``1(SixLabors.ImageSharp.ImageFrame{``0})">
             <inheritdoc/>
+        </member>
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.IColorIndexCache`1">
+            <summary>
+            Represents a cache used for efficiently retrieving palette indices for colors.
+            </summary>
+            <typeparam name="T">The type of the cache.</typeparam>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.IColorIndexCache`1.Create(SixLabors.ImageSharp.Memory.MemoryAllocator)">
+            <summary>
+            Creates a new instance of the cache.
+            </summary>
+            <param name="allocator">The memory allocator to use.</param>
+            <returns>
+            The new instance of the cache.
+            </returns>
+        </member>
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.IColorIndexCache">
+            <summary>
+            Represents a cache used for efficiently retrieving palette indices for colors.
+            </summary>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.IColorIndexCache.TryAdd(SixLabors.ImageSharp.PixelFormats.Rgba32,System.Int16)">
+            <summary>
+            Adds a color to the cache.
+            </summary>
+            <param name="color">The color to add.</param>
+            <param name="value">The index of the color in the palette.</param>
+            <returns>
+            <see langword="true"/> if the color was added; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.IColorIndexCache.TryGetValue(SixLabors.ImageSharp.PixelFormats.Rgba32,System.Int16@)">
+            <summary>
+            Gets the index of the color in the palette.
+            </summary>
+            <param name="color">The color to get the index for.</param>
+            <param name="value">The index of the color in the palette.</param>
+            <returns>
+            <see langword="true"/> if the color is in the palette; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.IColorIndexCache.Clear">
+            <summary>
+            Clears the cache.
+            </summary>
+        </member>
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.HybridCache">
+            <summary>
+            A hybrid cache for color distance lookups that combines an exact-match dictionary with
+            a fallback coarse lookup table.
+            </summary>
+            <remarks>
+            This cache uses a fallback table with  2,097,152 bins, each storing a 2-byte value
+            (approximately 4 MB total), while the exact-match dictionary is limited to 512 entries
+            and occupies roughly 4 KB. Overall, the worst-case memory usage is about 4 MB.
+            Lookups and insertions are performed in constant time (O(1)) because the fallback table
+            is accessed via direct indexing and the dictionary employs a simple hash-based bucket mechanism.
+            The design achieves extremely fast color distance lookups with a predictable, fixed memory footprint.
+            </remarks>
+        </member>
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.CoarseCache">
+            <summary>
+            A coarse cache for color distance lookups that uses a fixed-size lookup table.
+            </summary>
+            <remarks>
+            This cache uses a fixed lookup table with 2,097,152 bins, each storing a 2-byte value,
+            resulting in a worst-case memory usage of approximately 4 MB. Lookups and insertions are
+            performed in constant time (O(1)) via direct table indexing. This design is optimized for
+            speed while maintaining a predictable, fixed memory footprint.
+            </remarks>
+        </member>
+        <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.AccurateCache">
+            <summary>
+            A fixed-capacity dictionary with exactly 512 entries mapping a <see cref="T:System.UInt32"/> key
+            to a <see cref="T:System.Int16"/> value.
+            </summary>
+            <remarks>
+            The dictionary is implemented using a fixed array of 512 buckets and an entries array
+            of the same size. The bucket for a key is computed as (key &amp; 0x1FF), and collisions are
+            resolved through a linked chain stored in the <see cref="F:SixLabors.ImageSharp.Processing.Processors.Quantization.AccurateCache.Entry.Next"/> field.
+            The overall memory usage is approximately 4–5 KB. Both lookup and insertion operations are,
+            on average, O(1) since the bucket is determined via a simple bitmask and collision chains are
+            typically very short; in the worst-case, the number of iterations is bounded by 256.
+            This guarantees highly efficient and predictable performance for small, fixed-size color palettes.
+            </remarks>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.AccurateCache.Clear">
+            <summary>
+            Clears the dictionary.
+            </summary>
         </member>
         <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.IPixelSamplingStrategy">
             <summary>
@@ -65398,6 +65578,12 @@
             Defaults to <see cref="F:SixLabors.ImageSharp.Processing.Processors.Quantization.QuantizerConstants.MaxColors"/>.
             </summary>
         </member>
+        <member name="P:SixLabors.ImageSharp.Processing.Processors.Quantization.QuantizerOptions.ColorMatchingMode">
+            <summary>
+            Gets or sets the color matching mode used for matching pixel values to palette colors.
+            Defaults to <see cref="F:SixLabors.ImageSharp.Processing.Processors.Quantization.ColorMatchingMode.Coarse"/>.
+            </summary>
+        </member>
         <member name="T:SixLabors.ImageSharp.Processing.Processors.Quantization.QuantizerUtilities">
             <summary>
             Contains utility methods for <see cref="T:SixLabors.ImageSharp.Processing.Processors.Quantization.IQuantizer`1"/> instances.
@@ -65581,6 +65767,12 @@
         </member>
         <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.WuQuantizer`1.AddPaletteColors(SixLabors.ImageSharp.Memory.Buffer2DRegion{`0})">
             <inheritdoc/>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.WuQuantizer`1.ResolvePalette">
+            <summary>
+            Once all histogram data has been accumulated, this method computes the moments,
+            splits the color cube, and resolves the final palette from the accumulated histogram.
+            </summary>
         </member>
         <member name="M:SixLabors.ImageSharp.Processing.Processors.Quantization.WuQuantizer`1.QuantizeFrame(SixLabors.ImageSharp.ImageFrame{`0},SixLabors.ImageSharp.Rectangle)">
             <inheritdoc/>
@@ -66808,88 +67000,53 @@
             <param name="matrix">The transform matrix.</param>
             <returns>The <see cref="T:System.Numerics.Vector2"/>.</returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateRotationTransformMatrixDegrees(System.Single,SixLabors.ImageSharp.Size)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateRotationTransformMatrixDegrees(System.Single,SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TransformSpace)">
             <summary>
             Creates a centered rotation transform matrix using the given rotation in degrees and the source size.
             </summary>
             <param name="degrees">The amount of rotation, in degrees.</param>
             <param name="size">The source image size.</param>
+            <param name="transformSpace">The <see cref="T:SixLabors.ImageSharp.Processing.TransformSpace"/> to use when creating the centered matrix.</param>
             <returns>The <see cref="T:System.Numerics.Matrix3x2"/>.</returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateRotationTransformMatrixRadians(System.Single,SixLabors.ImageSharp.Size)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateRotationTransformMatrixRadians(System.Single,SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TransformSpace)">
             <summary>
             Creates a centered rotation transform matrix using the given rotation in radians and the source size.
             </summary>
             <param name="radians">The amount of rotation, in radians.</param>
             <param name="size">The source image size.</param>
+            <param name="transformSpace">The <see cref="T:SixLabors.ImageSharp.Processing.TransformSpace"/> to use when creating the centered matrix.</param>
             <returns>The <see cref="T:System.Numerics.Matrix3x2"/>.</returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateRotationBoundsMatrixDegrees(System.Single,SixLabors.ImageSharp.Size)">
-            <summary>
-            Creates a centered rotation bounds matrix using the given rotation in degrees and the source size.
-            </summary>
-            <param name="degrees">The amount of rotation, in degrees.</param>
-            <param name="size">The source image size.</param>
-            <returns>The <see cref="T:System.Numerics.Matrix3x2"/>.</returns>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateRotationBoundsMatrixRadians(System.Single,SixLabors.ImageSharp.Size)">
-            <summary>
-            Creates a centered rotation bounds matrix using the given rotation in radians and the source size.
-            </summary>
-            <param name="radians">The amount of rotation, in radians.</param>
-            <param name="size">The source image size.</param>
-            <returns>The <see cref="T:System.Numerics.Matrix3x2"/>.</returns>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateSkewTransformMatrixDegrees(System.Single,System.Single,SixLabors.ImageSharp.Size)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateSkewTransformMatrixDegrees(System.Single,System.Single,SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TransformSpace)">
             <summary>
             Creates a centered skew transform matrix from the give angles in degrees and the source size.
             </summary>
             <param name="degreesX">The X angle, in degrees.</param>
             <param name="degreesY">The Y angle, in degrees.</param>
             <param name="size">The source image size.</param>
+            <param name="transformSpace">The <see cref="T:SixLabors.ImageSharp.Processing.TransformSpace"/> to use when creating the centered matrix.</param>
             <returns>The <see cref="T:System.Numerics.Matrix3x2"/>.</returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateSkewTransformMatrixRadians(System.Single,System.Single,SixLabors.ImageSharp.Size)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateSkewTransformMatrixRadians(System.Single,System.Single,SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TransformSpace)">
             <summary>
             Creates a centered skew transform matrix from the give angles in radians and the source size.
             </summary>
             <param name="radiansX">The X angle, in radians.</param>
             <param name="radiansY">The Y angle, in radians.</param>
             <param name="size">The source image size.</param>
+            <param name="transformSpace">The <see cref="T:SixLabors.ImageSharp.Processing.TransformSpace"/> to use when creating the centered matrix.</param>
             <returns>The <see cref="T:System.Numerics.Matrix3x2"/>.</returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateSkewBoundsMatrixDegrees(System.Single,System.Single,SixLabors.ImageSharp.Size)">
-            <summary>
-            Creates a centered skew bounds matrix from the give angles in degrees and the source size.
-            </summary>
-            <param name="degreesX">The X angle, in degrees.</param>
-            <param name="degreesY">The Y angle, in degrees.</param>
-            <param name="size">The source image size.</param>
-            <returns>The <see cref="T:System.Numerics.Matrix3x2"/>.</returns>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateSkewBoundsMatrixRadians(System.Single,System.Single,SixLabors.ImageSharp.Size)">
-            <summary>
-            Creates a centered skew bounds matrix from the give angles in radians and the source size.
-            </summary>
-            <param name="radiansX">The X angle, in radians.</param>
-            <param name="radiansY">The Y angle, in radians.</param>
-            <param name="size">The source image size.</param>
-            <returns>The <see cref="T:System.Numerics.Matrix3x2"/>.</returns>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateCenteredTransformMatrix(SixLabors.ImageSharp.Rectangle,System.Numerics.Matrix3x2)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateCenteredTransformMatrix(System.Numerics.Matrix3x2,SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TransformSpace)">
             <summary>
             Gets the centered transform matrix based upon the source rectangle.
             </summary>
-            <param name="sourceRectangle">The source image bounds.</param>
             <param name="matrix">The transformation matrix.</param>
-            <returns>The <see cref="T:System.Numerics.Matrix3x2"/></returns>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateCenteredBoundsMatrix(SixLabors.ImageSharp.Rectangle,System.Numerics.Matrix3x2)">
-            <summary>
-            Gets the centered bounds matrix based upon the source rectangle.
-            </summary>
-            <param name="sourceRectangle">The source image bounds.</param>
-            <param name="matrix">The transformation matrix.</param>
+            <param name="size">The source image size.</param>
+            <param name="transformSpace">
+            The <see cref="T:SixLabors.ImageSharp.Processing.TransformSpace"/> to use when creating the centered matrix.
+            </param>
             <returns>The <see cref="T:System.Numerics.Matrix3x2"/></returns>
         </member>
         <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.CreateTaperMatrix(SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TaperSide,SixLabors.ImageSharp.Processing.TaperCorner,System.Single)">
@@ -66903,59 +67060,89 @@
             <param name="fraction">The amount to taper.</param>
             <returns>The <see cref="T:System.Numerics.Matrix4x4"/></returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetTransformedBoundingRectangle(SixLabors.ImageSharp.Rectangle,System.Numerics.Matrix3x2)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetTransformedSize(System.Numerics.Matrix3x2,SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TransformSpace)">
             <summary>
-            Returns the rectangle bounds relative to the source for the given transformation matrix.
+            Returns the size relative to the source for the given transformation matrix.
             </summary>
-            <param name="rectangle">The source rectangle.</param>
             <param name="matrix">The transformation matrix.</param>
+            <param name="size">The source size.</param>
+            <param name="transformSpace">The <see cref="T:SixLabors.ImageSharp.Processing.TransformSpace"/> to use when calculating the size.</param>
+            <returns>The <see cref="T:SixLabors.ImageSharp.Size"/>.</returns>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetTransformedSize(System.Numerics.Matrix4x4,SixLabors.ImageSharp.Size)">
+            <summary>
+            Returns the size relative to the source for the given transformation matrix.
+            </summary>
+            <param name="matrix">The transformation matrix.</param>
+            <param name="size">The source size.</param>
             <returns>
-            The <see cref="T:SixLabors.ImageSharp.Rectangle"/>.
+            The <see cref="T:SixLabors.ImageSharp.Size"/>.
             </returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetTransformedRectangle(SixLabors.ImageSharp.Rectangle,System.Numerics.Matrix3x2)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetUnboundedTransformedSize(System.Numerics.Matrix3x2,SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TransformSpace)">
+            <summary>
+            Returns the size relative to the source for the given transformation matrix.
+            </summary>
+            <param name="matrix">The transformation matrix.</param>
+            <param name="size">The source size.</param>
+            <param name="transformSpace">The <see cref="T:SixLabors.ImageSharp.Processing.TransformSpace"/> to use when calculating the size.</param>
+            <returns>The <see cref="T:SixLabors.ImageSharp.Size"/>.</returns>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetTransformedSize(System.Numerics.Matrix3x2,SixLabors.ImageSharp.Size,SixLabors.ImageSharp.Processing.TransformSpace,System.Boolean)">
+            <summary>
+            Returns the size relative to the source for the given transformation matrix.
+            </summary>
+            <param name="matrix">The transformation matrix.</param>
+            <param name="size">The source size.</param>
+            <param name="transformSpace">The <see cref="T:SixLabors.ImageSharp.Processing.TransformSpace"/> to use when calculating the size.</param>
+            <param name="constrain">Whether to constrain the size to ensure that the dimensions are positive.</param>
+            <returns>
+            The <see cref="T:SixLabors.ImageSharp.Size"/>.
+            </returns>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.TryGetTransformedRectangle(SixLabors.ImageSharp.RectangleF,System.Numerics.Matrix3x2,SixLabors.ImageSharp.Rectangle@)">
             <summary>
             Returns the rectangle relative to the source for the given transformation matrix.
             </summary>
             <param name="rectangle">The source rectangle.</param>
             <param name="matrix">The transformation matrix.</param>
+            <param name="bounds">The resulting bounding rectangle.</param>
             <returns>
-            The <see cref="T:SixLabors.ImageSharp.Rectangle"/>.
+            <see langword="true"/> if the transformation was successful; otherwise, <see langword="false"/>.
             </returns>
         </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetTransformedSize(SixLabors.ImageSharp.Size,System.Numerics.Matrix3x2)">
-            <summary>
-            Returns the size relative to the source for the given transformation matrix.
-            </summary>
-            <param name="size">The source size.</param>
-            <param name="matrix">The transformation matrix.</param>
-            <returns>
-            The <see cref="T:SixLabors.ImageSharp.Size"/>.
-            </returns>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetTransformedRectangle(SixLabors.ImageSharp.Rectangle,System.Numerics.Matrix4x4)">
+        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.TryGetTransformedRectangle(SixLabors.ImageSharp.RectangleF,System.Numerics.Matrix4x4,SixLabors.ImageSharp.Rectangle@)">
             <summary>
             Returns the rectangle relative to the source for the given transformation matrix.
             </summary>
             <param name="rectangle">The source rectangle.</param>
             <param name="matrix">The transformation matrix.</param>
+            <param name="bounds">The resulting bounding rectangle.</param>
             <returns>
-            The <see cref="T:SixLabors.ImageSharp.Rectangle"/>.
-            </returns>
-        </member>
-        <member name="M:SixLabors.ImageSharp.Processing.Processors.Transforms.TransformUtils.GetTransformedSize(SixLabors.ImageSharp.Size,System.Numerics.Matrix4x4)">
-            <summary>
-            Returns the size relative to the source for the given transformation matrix.
-            </summary>
-            <param name="size">The source size.</param>
-            <param name="matrix">The transformation matrix.</param>
-            <returns>
-            The <see cref="T:SixLabors.ImageSharp.Size"/>.
+            <see langword="true"/> if the transformation was successful; otherwise, <see langword="false"/>.
             </returns>
         </member>
         <member name="T:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder">
             <summary>
             A helper class for constructing <see cref="T:System.Numerics.Matrix4x4"/> instances for use in projective transforms.
+            </summary>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder"/> class.
+            </summary>
+        </member>
+        <member name="M:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder.#ctor(SixLabors.ImageSharp.Processing.TransformSpace)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder"/> class.
+            </summary>
+            <param name="transformSpace">
+            The <see cref="P:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder.TransformSpace"/> to use when applying the projective transform.
+            </param>
+        </member>
+        <member name="P:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder.TransformSpace">
+            <summary>
+            Gets the <see cref="P:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder.TransformSpace"/> to use when applying the projective transform.
             </summary>
         </member>
         <member name="M:SixLabors.ImageSharp.Processing.ProjectiveTransformBuilder.PrependTaper(SixLabors.ImageSharp.Processing.TaperSide,SixLabors.ImageSharp.Processing.TaperCorner,System.Single)">
@@ -67395,6 +67582,27 @@
         <member name="F:SixLabors.ImageSharp.Processing.TaperSide.Bottom">
             <summary>
             Taper the bottom side
+            </summary>
+        </member>
+        <member name="T:SixLabors.ImageSharp.Processing.TransformSpace">
+            <summary>
+            Represents the different spaces used in transformation operations.
+            </summary>
+        </member>
+        <member name="F:SixLabors.ImageSharp.Processing.TransformSpace.Coordinate">
+            <summary>
+            Coordinate space is a continuous, mathematical grid where objects and positions
+            are defined with precise, often fractional values. This space allows for fine-grained
+            transformations like scaling, rotation, and translation with high precision.
+            In coordinate space, an image can span from (0,0) to (4,4) for a 4x4 image, including the boundaries.
+            </summary>
+        </member>
+        <member name="F:SixLabors.ImageSharp.Processing.TransformSpace.Pixel">
+            <summary>
+            Pixel space is a discrete grid where each position corresponds to a specific pixel on the screen.
+            In this space, positions are defined by whole numbers, with no fractional values.
+            A 4x4 image in pixel space covers exactly 4 pixels wide and 4 pixels tall, ranging from (0,0) to (3,3).
+            Pixel space is used when rendering images to ensure that everything aligns with the actual pixels on the screen.
             </summary>
         </member>
         <member name="T:SixLabors.ImageSharp.ReadOrigin">

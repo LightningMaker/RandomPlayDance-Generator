@@ -364,7 +364,7 @@
             this.MP4Download.Name = "MP4Download";
             this.MP4Download.Size = new System.Drawing.Size(161, 28);
             this.MP4Download.TabIndex = 3;
-            this.MP4Download.Text = "MP4 转音频";
+            this.MP4Download.Text = "MP4 转 MP3";
             this.MP4Download.UseVisualStyleBackColor = true;
             this.MP4Download.CheckedChanged += new System.EventHandler(this.MP4Download_CheckedChanged);
             // 
@@ -378,7 +378,7 @@
             this.groupBox6.Size = new System.Drawing.Size(273, 141);
             this.groupBox6.TabIndex = 8;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Beta功能";
+            this.groupBox6.Text = "音频设置";
             // 
             // checkBoxVol
             // 
