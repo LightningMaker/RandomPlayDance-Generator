@@ -375,38 +375,22 @@ namespace RandomPlayDance_Generator_3
                 #region 调用ffmpeg合并音频
                 try
                 {
-                    string customArgument = "-filter_complex \"";
+                    // 1. 生成 audiolist.txt 文件
+                    string listFilePath = Path.Combine("temp", "audiolist.txt");
+                    StringBuilder sbList = new StringBuilder();
 
-                    if (EnableLoudnorm)
+                    foreach (var pathUrl in songPaths)
                     {
-                        // 对每个输入应用 loudnorm 滤镜
-                        for (int i = 0; i < songPaths.Count; i++)
-                        {
-                            customArgument += $"[{i}:0]loudnorm=I=-16:TP=-1.5:LRA=11[a{i}];";
-                        }
-                        for (int i = 0; i < songPaths.Count; i++)
-                        {
-                            customArgument += $"[a{i}]";
-                        }
-                        customArgument += $"concat=n={songPaths.Count}:v=0:a=1[out]\" -map \"[out]\"";
-                    }
-                    else
-                    {
-                        // 不做音量均衡，直接合并
-                        for (int i = 0; i < songPaths.Count; i++)
-                        {
-                            customArgument += $"[{i}:0]";
-                        }
-                        customArgument += $"concat=n={songPaths.Count}:v=0:a=1[out]\" -map \"[out]\"";
+                        // 获取绝对路径，并替换反斜杠为正斜杠（FFmpeg concat文件格式要求）
+                        string absPath = Path.GetFullPath(pathUrl).Replace("\\", "/");
+                        // 写入格式: file 'C:/path/to/file.mp3'
+                        sbList.AppendLine($"file '{absPath}'");
                     }
 
-                    var argument = FFMpegArguments.FromFileInput(songPaths[0]);
-                    for (int i = 1; i < songPaths.Count; i++)
-                    {
-                        argument.AddFileInput(songPaths[i]);
-                    }
+                    File.WriteAllText(listFilePath, sbList.ToString());
+                    Form1.Instance.UpdateLog($"已生成合并列表文件: {listFilePath}", Form1.LogLevel.Detail);
 
-                    // 根据Excel文件名生成导出文件名
+                    // 2. 准备导出路径
                     string path = Form1.ExcelPath;
                     if (path == null)
                     {
@@ -415,12 +399,29 @@ namespace RandomPlayDance_Generator_3
                     string exportFile = Path.Combine(exportPath, Path.GetFileNameWithoutExtension(path)
                         + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".mp3");
 
-                    argument.OutputToFile(exportFile, true, arguments => arguments.WithCustomArgument(customArgument)).ProcessSynchronously();
+                    // 3. 配置 FFmpeg 参数
+                    // 使用 -f concat -safe 0 -i list.txt
+                    var argument = FFMpegArguments.FromFileInput(listFilePath, true, options => options.WithCustomArgument("-f concat -safe 0"));
 
+                    argument.OutputToFile(exportFile, true, options =>
+                    {
+                        // 如果开启了响度均衡
+                        if (EnableLoudnorm)
+                        {
+                            // 使用 -af (audio filter) 而不是 complex filter，因为现在只有一个输入流(concat后的流)
+                            options.WithCustomArgument("-af loudnorm=I=-16:TP=-1.5:LRA=11");
+                        }
+
+                        // 强制重新编码为 MP3 (libmp3lame)，确保合并后的时间戳和格式正确
+                        // 如果不重新编码直接 copy，可能会因为采样率不一致导致合并失败或播放异常
+                        options.WithAudioCodec(AudioCodec.LibMp3Lame);
+
+                        // 可选：设置比特率，保证音质
+                        options.WithAudioBitrate(320);
+                    }).ProcessSynchronously();
 
                     // 输出计数
                     Form1.Instance.UpdateLog($"剪辑成功 {SongSuccessCount} 首，失败 {SongFailCount} 首", Form1.LogLevel.Message);
-
                     Form1.Instance.UpdateLog("已生成随舞音频 " + Path.Combine("\\", exportFile), Form1.LogLevel.Message);
 
                     try
