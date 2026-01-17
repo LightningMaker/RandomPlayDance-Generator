@@ -181,21 +181,7 @@ namespace RandomPlayDance_Generator_3
 
                         Form1.Instance.UpdateLog("裁剪 " + songName + "..." + begin + "-" + end, Form1.LogLevel.Message);
 
-                        //FFMpeg.SubVideo(loadFile, saveFile, begin, end);
-                        FFMpegArguments.FromFileInput(loadFile)
-                            .OutputToFile(saveFile, true, options =>
-                            {
-                                options.WithDuration(end - begin);
-
-                                if (EnableLoudnorm)
-                                {
-                                    options.WithCustomArgument("-af loudnorm=I=-16:TP=-1.5:LRA=11");
-                                }
-
-                                options.WithAudioCodec(AudioCodec.LibMp3Lame);
-                                options.WithAudioBitrate(320);
-                            })
-                            .ProcessSynchronously();
+                        FFMpeg.SubVideo(loadFile, saveFile, begin, end);
 
                         //TrimMp3(loadFile, saveFile, begin, end);
                         Form1.Instance.UpdateLog("裁剪完成", Form1.LogLevel.Message);
@@ -297,6 +283,9 @@ namespace RandomPlayDance_Generator_3
                     }
                 }
 
+                // 记录所有作为“过渡音频”的路径，方便后面区分（防止对它们做 loudnorm）
+                List<string> transitionFiles = new List<string>();
+
                 try
                 {
                     // 插入间隔音频
@@ -335,6 +324,10 @@ namespace RandomPlayDance_Generator_3
                                     builder.WithCustomArgument($"-filter_complex \"{filter}\" -map \"[out]\"");
                                 }).ProcessSynchronously();
                             }
+                            // 标记为过渡音频（仅添加一次）
+                            if (!transitionFiles.Contains(intervalFile))
+                                transitionFiles.Add(intervalFile);
+
                             Form1.Instance.UpdateLog($"正在插入空白间隔，时间为{time}秒", Form1.LogLevel.Message);
                             for (int i = songPaths.Count - 1; i >= 0; i--)
                             {
@@ -346,6 +339,9 @@ namespace RandomPlayDance_Generator_3
                     {
                         Form1.Instance.UpdateLog($"正在插入5秒倒计时", Form1.LogLevel.Message);
                         string countdownFile = "assets/Countdown.mp3";
+                        // 标记为过渡音频
+                        if (!transitionFiles.Contains(countdownFile))
+                            transitionFiles.Add(countdownFile);
                         for (int i = songPaths.Count - 1; i >= 0; i--)
                         {
                             songPaths.Insert(i, countdownFile);
@@ -357,6 +353,8 @@ namespace RandomPlayDance_Generator_3
                         {
                             Form1.Instance.UpdateLog($"正在插入自定义过渡音频", Form1.LogLevel.Message);
                             string customIntervalFile = Form1.CustomIntervalPath;
+                            if (!transitionFiles.Contains(customIntervalFile))
+                                transitionFiles.Add(customIntervalFile);
                             for (int i = songPaths.Count - 1; i >= 0; i--)
                             {
                                 songPaths.Insert(i, customIntervalFile);
@@ -390,63 +388,179 @@ namespace RandomPlayDance_Generator_3
                 #region 调用ffmpeg合并音频
                 try
                 {
-                    // 1. 生成 audiolist.txt 文件
-                    string listFilePath = Path.Combine("temp", "AudioList.txt");
-                    StringBuilder sbList = new StringBuilder();
-
-                    foreach (var pathUrl in songPaths)
+                    // 如果没有启用 loudnorm，保留原有流程：一次性 concat
+                    if (!EnableLoudnorm)
                     {
-                        // 获取绝对路径，并替换反斜杠为正斜杠（FFmpeg concat文件格式要求）
-                        string absPath = Path.GetFullPath(pathUrl).Replace("\\", "/");
-                        // 写入格式: file 'C:/path/to/file.mp3'
-                        sbList.AppendLine($"file '{absPath}'");
-                    }
+                        // 1. 生成 audiolist.txt 文件
+                        string listFilePath = Path.Combine("temp", "AudioList.txt");
+                        StringBuilder sbList = new StringBuilder();
 
-                    File.WriteAllText(listFilePath, sbList.ToString());
-                    //Form1.Instance.UpdateLog($"已生成合并列表文件: {listFilePath}", Form1.LogLevel.Detail);
-
-                    // 2. 准备导出路径
-                    string path = Form1.ExcelPath;
-                    if (path == null)
-                    {
-                        path = "歌单.xlsx";
-                    }
-                    string exportFile = Path.Combine(exportPath, Path.GetFileNameWithoutExtension(path)
-                        + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".mp3");
-
-                    // 3. 配置 FFmpeg 参数
-                    // 使用 -f concat -safe 0 -i list.txt
-                    var argument = FFMpegArguments.FromFileInput(listFilePath, true, options => options.WithCustomArgument("-f concat -safe 0"));
-
-                    argument.OutputToFile(exportFile, true, options =>
-                    {
-                        // 如果开启了响度均衡
-                        /*if (EnableLoudnorm)
+                        foreach (var pathUrl in songPaths)
                         {
-                            // 使用 -af (audio filter) 而不是 complex filter，因为现在只有一个输入流(concat后的流)
-                            options.WithCustomArgument("-af loudnorm=I=-16:TP=-1.5:LRA=11");
-                        }**/
+                            // 获取绝对路径，并替换反斜杠为正斜杠（FFmpeg concat文件格式要求）
+                            string absPath = Path.GetFullPath(pathUrl).Replace("\\", "/");
+                            // 写入格式: file 'C:/path/to/file.mp3'
+                            sbList.AppendLine($"file '{absPath}'");
+                        }
 
-                        // 强制重新编码为 MP3 (libmp3lame)，确保合并后的时间戳和格式正确
-                        // 如果不重新编码直接 copy，可能会因为采样率不一致导致合并失败或播放异常
-                        options.WithAudioCodec(AudioCodec.LibMp3Lame);
+                        File.WriteAllText(listFilePath, sbList.ToString());
 
-                        // 可选：设置比特率，保证音质
-                        options.WithAudioBitrate(320);
-                    }).ProcessSynchronously();
+                        // 2. 准备导出路径
+                        string path = Form1.ExcelPath;
+                        if (path == null)
+                        {
+                            path = "歌单.xlsx";
+                        }
+                        string exportFile = Path.Combine(exportPath, Path.GetFileNameWithoutExtension(path)
+                            + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".mp3");
 
-                    // 输出计数
-                    Form1.Instance.UpdateLog($"剪辑成功 {SongSuccessCount} 首，失败 {SongFailCount} 首", Form1.LogLevel.Message);
-                    Form1.Instance.UpdateLog("已生成随舞音频 " + Path.Combine("\\", exportFile), Form1.LogLevel.Message);
+                        // 3. 配置 FFmpeg 参数（不使用 loudnorm）
+                        var argument = FFMpegArguments.FromFileInput(listFilePath, true, options => options.WithCustomArgument("-f concat -safe 0"));
 
-                    try
-                    {
-                        // 打开文件夹
-                        Process.Start("explorer.exe", Path.Combine(Environment.CurrentDirectory, exportPath));
+                        argument.OutputToFile(exportFile, true, options =>
+                        {
+                            options.WithAudioCodec(AudioCodec.LibMp3Lame);
+                            options.WithAudioBitrate(320);
+                        }).ProcessSynchronously();
+
+                        Form1.Instance.UpdateLog($"剪辑成功 {SongSuccessCount} 首，失败 {SongFailCount} 首", Form1.LogLevel.Message);
+                        Form1.Instance.UpdateLog("已生成随舞音频 " + Path.Combine("\\", exportFile), Form1.LogLevel.Message);
+
+                        try
+                        {
+                            // 打开文件夹
+                            Process.Start("explorer.exe", Path.Combine(Environment.CurrentDirectory, exportPath));
+                        }
+                        catch (Exception ex)
+                        {
+                            Form1.Instance.UpdateLog("打开文件夹失败，请手动打开exports文件夹获取生成的音频文件" + ex.Message, Form1.LogLevel.Warning);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Form1.Instance.UpdateLog("打开文件夹失败，请手动打开exports文件夹获取生成的音频文件" + ex.Message, Form1.LogLevel.Warning);
+                        // EnableLoudnorm == true 的情况：分块处理主歌曲，过渡音频不做均衡，最后合并所有块与过渡音频
+                        //删除chunk临时文件夹（如果存在）
+                        string tempDir = "temp/chunk";
+                        if (Directory.Exists(tempDir))
+                        {
+                            Directory.Delete(tempDir, true);
+                        }
+                        Directory.CreateDirectory(tempDir);
+
+                        List<string> finalSequence = new List<string>();
+                        List<string> currentChunk = new List<string>();
+                        int chunkIndex = 0;
+
+                        Func<List<string>, string> processChunk = (chunkPaths) =>
+                        {
+                            if (chunkPaths == null || chunkPaths.Count == 0)
+                                return null;
+
+                            string outChunk = Path.Combine(tempDir, $"chunk_{chunkIndex}.mp3");
+                            chunkIndex++;
+
+                            if (chunkPaths.Count == 1)
+                            {
+                                // 单文件：对该文件进行重新编码并应用 loudnorm
+                                var argSingle = FFMpegArguments.FromFileInput(chunkPaths[0]);
+                                argSingle.OutputToFile(outChunk, true, opts =>
+                                {
+                                    opts.WithCustomArgument("-af loudnorm=I=-14:TP=-1.5:LRA=11");//默认I=-16
+                                    opts.WithAudioCodec(AudioCodec.LibMp3Lame);
+                                    opts.WithAudioBitrate(320);
+                                }).ProcessSynchronously();
+                            }
+                            else
+                            {
+                                // 多文件：先生成列表文件，再 concat 并应用 loudnorm
+                                string chunkList = Path.Combine(tempDir, $"chunk_{chunkIndex - 1}_list.txt");
+                                StringBuilder sb = new StringBuilder();
+                                foreach (var p in chunkPaths)
+                                {
+                                    string abs = Path.GetFullPath(p).Replace("\\", "/");
+                                    sb.AppendLine($"file '{abs}'");
+                                }
+                                File.WriteAllText(chunkList, sb.ToString());
+
+                                var arg = FFMpegArguments.FromFileInput(chunkList, true, o => o.WithCustomArgument("-f concat -safe 0"));
+                                arg.OutputToFile(outChunk, true, opts =>
+                                {
+                                    opts.WithCustomArgument("-af apad=pad_dur=3,loudnorm=I=-16:TP=-1.5:LRA=11");
+                                    opts.WithAudioCodec(AudioCodec.LibMp3Lame);
+                                    opts.WithAudioBitrate(320);
+                                }).ProcessSynchronously();
+                            }
+
+                            return outChunk;
+                        };
+
+                        for (int i = 0; i < songPaths.Count; i++)
+                        {
+                            var p = songPaths[i];
+                            bool isTransition = transitionFiles.Contains(p);
+                            if (!isTransition)
+                            {
+                                // 主歌曲，加入当前块
+                                currentChunk.Add(p);
+                            }
+                            else
+                            {
+                                // 遇到过渡音频：先处理当前块（如果有），再把过渡音频加入 finalSequence
+                                if (currentChunk.Count > 0)
+                                {
+                                    var processed = processChunk(currentChunk);
+                                    if (processed != null)
+                                        finalSequence.Add(processed);
+                                    currentChunk.Clear();
+                                }
+                                finalSequence.Add(p); // 过渡音频直接加入，不做均衡
+                            }
+                        }
+
+                        // 处理末尾残留的主歌曲块
+                        if (currentChunk.Count > 0)
+                        {
+                            var processed = processChunk(currentChunk);
+                            if (processed != null)
+                                finalSequence.Add(processed);
+                            currentChunk.Clear();
+                        }
+
+                        // 生成最终合并的 list 文件
+                        string finalList = Path.Combine("temp", "AudioList.txt");
+                        StringBuilder finalSb = new StringBuilder();
+                        foreach (var pathUrl in finalSequence)
+                        {
+                            string absPath = Path.GetFullPath(pathUrl).Replace("\\", "/");
+                            finalSb.AppendLine($"file '{absPath}'");
+                        }
+                        File.WriteAllText(finalList, finalSb.ToString());
+
+                        // 导出路径
+                        string xlsPath = Form1.ExcelPath;
+                        if (xlsPath == null) xlsPath = "歌单.xlsx";
+                        string exportFile = Path.Combine(exportPath, Path.GetFileNameWithoutExtension(xlsPath)
+                            + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".mp3");
+
+                        // 最终 concat（不再应用 loudnorm）
+                        var finalArg = FFMpegArguments.FromFileInput(finalList, true, o => o.WithCustomArgument("-f concat -safe 0"));
+                        finalArg.OutputToFile(exportFile, true, opts =>
+                        {
+                            opts.WithAudioCodec(AudioCodec.LibMp3Lame);
+                            opts.WithAudioBitrate(320);
+                        }).ProcessSynchronously();
+
+                        Form1.Instance.UpdateLog($"剪辑成功 {SongSuccessCount} 首，失败 {SongFailCount} 首", Form1.LogLevel.Message);
+                        Form1.Instance.UpdateLog("已生成随舞音频 " + Path.Combine("\\", exportFile), Form1.LogLevel.Message);
+
+                        try
+                        {
+                            Process.Start("explorer.exe", Path.Combine(Environment.CurrentDirectory, exportPath));
+                        }
+                        catch (Exception ex)
+                        {
+                            Form1.Instance.UpdateLog("打开文件夹失败，请手动打开exports文件夹获取生成的音频文件" + ex.Message, Form1.LogLevel.Warning);
+                        }
                     }
                 }
                 catch (Exception ex)
