@@ -465,6 +465,10 @@ namespace RandomPlayDance_Generator_3
                                 var argSingle = FFMpegArguments.FromFileInput(chunkPaths[0]);
                                 argSingle.OutputToFile(outChunk, true, opts =>
                                 {
+<<<<<<< HEAD
+=======
+                                    // 在结尾添加少量静音，防止 loudnorm 导致末尾裁剪
+>>>>>>> 7a2bb6bbe13478596fc14ad977d11fc5200aa1f2
                                     opts.WithCustomArgument("-af loudnorm=I=-14:TP=-1.5:LRA=11");//默认I=-16
                                     opts.WithAudioCodec(AudioCodec.LibMp3Lame);
                                     opts.WithAudioBitrate(320);
