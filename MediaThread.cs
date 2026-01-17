@@ -81,7 +81,7 @@ namespace RandomPlayDance_Generator_3
 
                     string songName = row[0].ToString();
                     string songID = row[1].ToString();
-                    
+
 
                     Form1.Instance.UpdateLog($"【{currentCount}/{dtTable.Rows.Count}】正在下载 " + songName + "...", Form1.LogLevel.Message);
 
@@ -181,7 +181,21 @@ namespace RandomPlayDance_Generator_3
 
                         Form1.Instance.UpdateLog("裁剪 " + songName + "..." + begin + "-" + end, Form1.LogLevel.Message);
 
-                        FFMpeg.SubVideo(loadFile, saveFile, begin, end);
+                        //FFMpeg.SubVideo(loadFile, saveFile, begin, end);
+                        FFMpegArguments.FromFileInput(loadFile)
+                            .OutputToFile(saveFile, true, options =>
+                            {
+                                options.WithDuration(end - begin);
+
+                                if (EnableLoudnorm)
+                                {
+                                    options.WithCustomArgument("-af loudnorm=I=-16:TP=-1.5:LRA=11");
+                                }
+
+                                options.WithAudioCodec(AudioCodec.LibMp3Lame);
+                                options.WithAudioBitrate(320);
+                            })
+                            .ProcessSynchronously();
 
                         //TrimMp3(loadFile, saveFile, begin, end);
                         Form1.Instance.UpdateLog("裁剪完成", Form1.LogLevel.Message);
@@ -215,7 +229,7 @@ namespace RandomPlayDance_Generator_3
 
                             SongFailCount++;// 失败计数
                         }
-                        
+
                     }
                 }
 
@@ -255,7 +269,7 @@ namespace RandomPlayDance_Generator_3
                 }
 
                 // 决定是否打乱
-                if(Form1.IsShuffled)
+                if (Form1.IsShuffled)
                 {
                     Form1.Instance.UpdateLog("正在打乱歌曲顺序...", Form1.LogLevel.Message);
                     songPaths = songPaths.OrderBy(x => Guid.NewGuid()).ToList();
@@ -275,7 +289,8 @@ namespace RandomPlayDance_Generator_3
                                 }
                             }
                         }
-                    }catch(Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         Form1.Instance.UpdateLog("获取歌曲名称失败：" + ex.Message, Form1.LogLevel.Error);
                         Form1.Instance.UpdateLog(ex.StackTrace, Form1.LogLevel.Error);
@@ -376,7 +391,7 @@ namespace RandomPlayDance_Generator_3
                 try
                 {
                     // 1. 生成 audiolist.txt 文件
-                    string listFilePath = Path.Combine("temp", "audiolist.txt");
+                    string listFilePath = Path.Combine("temp", "AudioList.txt");
                     StringBuilder sbList = new StringBuilder();
 
                     foreach (var pathUrl in songPaths)
@@ -388,7 +403,7 @@ namespace RandomPlayDance_Generator_3
                     }
 
                     File.WriteAllText(listFilePath, sbList.ToString());
-                    Form1.Instance.UpdateLog($"已生成合并列表文件: {listFilePath}", Form1.LogLevel.Detail);
+                    //Form1.Instance.UpdateLog($"已生成合并列表文件: {listFilePath}", Form1.LogLevel.Detail);
 
                     // 2. 准备导出路径
                     string path = Form1.ExcelPath;
@@ -406,11 +421,11 @@ namespace RandomPlayDance_Generator_3
                     argument.OutputToFile(exportFile, true, options =>
                     {
                         // 如果开启了响度均衡
-                        if (EnableLoudnorm)
+                        /*if (EnableLoudnorm)
                         {
                             // 使用 -af (audio filter) 而不是 complex filter，因为现在只有一个输入流(concat后的流)
                             options.WithCustomArgument("-af loudnorm=I=-16:TP=-1.5:LRA=11");
-                        }
+                        }**/
 
                         // 强制重新编码为 MP3 (libmp3lame)，确保合并后的时间戳和格式正确
                         // 如果不重新编码直接 copy，可能会因为采样率不一致导致合并失败或播放异常

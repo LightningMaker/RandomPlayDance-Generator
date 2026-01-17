@@ -38,7 +38,7 @@ namespace RandomPlayDance_Generator_3.Tools
                 //Form1.Instance.UpdateLog("Dash流详细信息：" + result, Form1.LogLevel.Detail);
 
                 Rootobject root = Newtonsoft.Json.JsonConvert.DeserializeObject<Rootobject>(result);
-                string stream = root?.data?.dash?.audio?.FirstOrDefault()?.base_url ?? "";
+                string stream = root?.data?.dash?.audio?.LastOrDefault()?.base_url ?? "";
                 //Form1.Instance.UpdateLog("Dash流：" + stream, Form1.LogLevel.Detail);
                 if (stream == "")
                 {
